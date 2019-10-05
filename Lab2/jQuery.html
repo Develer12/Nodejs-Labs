@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>jquery</title>
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div id="full-name"></div>
+
+<script>
+$(document).ready(() => {
+const END_POINT = "http://localhost:5000/api/name";
+let settings = {
+"async": true,
+"crossDomain": true,
+"url": END_POINT,
+"method": "GET"
+};
+$.ajax(settings).done(response => {
+$("#full-name").text(response);
+}).then(() => {});
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>4 Lab</title>
+</head>
+<body>
+    <section id="insert-names">
+        <div>
+            <label>
+                <input type="email" placeholder="From e-mail" name="New" id="mailfrom" type="text">
+                <input type="email" placeholder="Password" name="Pass" id="Passmail" type="text"><br>
+                <input type="email" placeholder="To e-mail" name="To" id="mailfor" type="text"><br>
+                <input placeholder="Message" name="Message" id="MS" type="text" size="60">
+            </label>
+        </div>
+        <button onclick="Send()">Send</button>
+        <section id="select-names"></section>
+    </section>
+
+    <script>
+        const ENDPOINT = 'http://localhost:5000/sendMS';
+
+        function Send() {
+          let namesData = Array.from(document.getElementsByName('newnamesData')).map(a => {
+              return {field: a.getAttribute('id'), value: a.value};
+          });
+            fetch(ENDPOINT, {
+                method: 'PUT',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    mfrom: namesData.find(a => a.field === 'mailfrom').value,
+                    name: namesData.find(a => a.field === 'mailfor').value,
+                    birth: namesData.find(a => a.field === 'MS').value,
+                })
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+</head>
+
+<script>
+    var xhr = new XMLHttpRequest();
+
+    function notify() {
+        xhr.open('GET', 'http://localhost:5000/api/name', true);
+        xhr.send();
+        xhr.onload = () => {
+            if (xhr.status !== 200) {
+                alert(xhr.status + ':' + xhr.statusText);
+            } else {
+                alert(xhr.response);
+                document.write(`<h1>${xhr.response}</h1>`);
+            }
+        }
+    };
+</script>
+
+<body>
+    <button onclick="notify()" style="height: 50px; width: 120px;" />
+</body>
+
+</html>
