@@ -6,9 +6,9 @@ function start() {
 async function JSON() {
     let jsonDiv = document.getElementById('json');
     fetch('http://localhost:5000/file/f.json')
-        .then(response => response.json())
+        .then(response => response.text())
         .then(jsonResponse => {
-            jsonDiv.innerText = JSON.stringify(jsonResponse);
+            jsonDiv.innerText = jsonResponse;
         });
 }
 
