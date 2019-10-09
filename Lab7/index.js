@@ -5,44 +5,51 @@ const fs = require('fs');
 const HOST = 'localhost';
 const PORT = 5000;
 const app = express();
-const _URI = ['/'];
 
 app.use(bodyParser.json());
-app.use(express.static(__dirname + '/f'));
 
-Fun = function(request, response, next)
+let HTTP404 = (req, res) =>
 {
-    if (request.method === 'GET')
-    {
-        if (_URI.includes(request.url))
-        {
-                next();
-        }
+    console.log('${req.method}: ${req.url}, HTTP status 404');
+    res.writeHead(404, {'Content-Type' : 'application/json; charset=utf-8'});
+    res.end('{"error" : "${req.method}: ${req.url}, HTTP status 404"}');
+}
 
-            let filePath = __dirname + '/f' + request.url;
-            File(filePath, response);
+let Get_handler = (req, res) =>
+{
+    switch (req.url)
+    {
+      case '/':     res.sendFile(__dirname + '/index.html'); break;
+      case '/file/f.png':
+      {
+          console.log('Get PNG');
+          res.writeHead(200, {'Content-Type' : 'image/png; charset=utf-8'});
+          res.end(fs.readFileSync(__dirname + '/file/f.png'));
+          break;
+      }
+      case '/file/f.docx':
+      {
+          console.log('Get Word');
+          res.writeHead(200, {'Content-Type' : 'text/doc; charset=utf-8'});
+          res.end(fs.readFileSync(__dirname + '/file/f.docx'));
+          break;
+      }
+      default:break;
+
     }
 }
 
-function File(filePath, response)
+let http_handler = (req, res) =>
 {
-    fs.stat(filePath, (err, stats) =>
+    switch (req.method)
     {
-        if (err) return;
-        if (stats.isFile())response.sendFile(filePath);
-    });
+      case 'GET': Get_handler(req, res); break;
+      default: HTTP404(req, res); break;
+    }
 }
-
-
-app.use(Fun);
-
-app.get('/', (request, response) =>
-{
-    response.sendFile(__dirname + '/index.html');
-});
 
 app.listen(PORT, HOST, () =>
 {
     const URL = `http://${HOST}:${PORT}`;
     console.log('Listening on ' + URL);
-});
+}).on('request', http_handler);
