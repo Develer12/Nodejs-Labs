@@ -30,8 +30,50 @@ let Get_handler = (req, res) =>
       case '/file/f.docx':
       {
           console.log('Get Word');
-          res.writeHead(200, {'Content-Type' : 'text/doc; charset=utf-8'});
+          res.writeHead(200, {'Content-Type' : 'application/docx; charset=utf-8'});
           res.end(fs.readFileSync(__dirname + '/file/f.docx'));
+          break;
+      }
+      case '/file/f.css':
+      {
+          console.log('Get CSS');
+          res.writeHead(200, {'Content-Type' : 'application/css; charset=utf-8'});
+          res.end(fs.readFileSync(__dirname + '/file/f.css'));
+          break;
+      }
+      case '/file/f.html':
+      {
+          console.log('Get HTML');
+          res.writeHead(200, {'Content-Type' : 'text/html; charset=utf-8'});
+          res.end(fs.readFileSync(__dirname + '/file/f.html'));
+          break;
+      }
+      case '/file/f.js':
+      {
+          console.log('Get js');
+          res.writeHead(200, {'Content-Type' : 'application/js; charset=utf-8'});
+          res.end(fs.readFileSync(__dirname + '/file/f.js'));
+          break;
+      }
+      case '/file/f.xml':
+      {
+          console.log('Get Word');
+          res.writeHead(200, {'Content-Type' : 'application/xml; charset=utf-8'});
+          res.end(fs.readFileSync(__dirname + '/file/f.xml'));
+          break;
+      }
+      case '/file/f.json':
+      {
+          console.log('Get Word');
+          res.writeHead(200, {'Content-Type' : 'application/json; charset=utf-8'});
+          res.end(fs.readFileSync(__dirname + '/file/f.json'));
+          break;
+      }
+      case '/file/f.mp4':
+      {
+          console.log('Get Word');
+          res.writeHead(200, {'Content-Type' : 'video/mp4; charset=utf-8'});
+          res.end(fs.readFileSync(__dirname + '/file/f.mp4'));
           break;
       }
       default:break;
