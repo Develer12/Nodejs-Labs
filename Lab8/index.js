@@ -1,13 +1,10 @@
-const express = require('express');
-const bodyParser = require('body-parser');
+const http = require('http');
 const fs = require('fs');
 var url = require("url");
 
-const HOST = 'localhost';
 const PORT = 5000;
-const app = express();
-
-app.use(bodyParser.json());
+let server = http.createServer();
+server.KeepAliveTimeout = 10000;
 
 let HTTP404 = (req, res) =>
 {
@@ -27,13 +24,6 @@ let Get_handler = (req, res) =>
 {
     switch (req.url)
     {
-      case '/':
-      {
-          console.log('Get Main Page');
-          res.writeHead(200, {'Content-Type' : 'text/html; charset=utf-8'});
-          res.end(fs.readFileSync(__dirname + '/index.html'));
-          break;
-      }
       case '/file/f.png':
       {
           console.log('Get PNG');
@@ -96,15 +86,54 @@ let Get_handler = (req, res) =>
               let set = parseInt(url.parse(req.url, true).query.set);
               if (Number.isInteger(set))
               {
-                  res.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
-                  res.end(`KeepAliveTimeout = ${KeepAliveTimeout}`);
+                  res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
+                  server.KeepAliveTimeout = set;
+                  res.end(`KeepAliveTimeout = ${server.KeepAliveTimeout}`);
               }
               else
               {
                 res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
-                res.end(`KeepAliveTimeout = ${KeepAliveTimeout()}`);
+                res.end(`KeepAliveTimeout = ${server.KeepAliveTimeout}`);
               }
           }
+          else if (url.parse(req.url).pathname === '/headers')
+          {
+
+          }
+          else if (url.parse(req.url).pathname === '/close')
+          {
+
+          }
+          else if (url.parse(req.url).pathname === '/socket')
+          {
+            server.on('connection', (socket) =>
+              {
+                console.log('Get socket');
+                res.writeHead(200, {'Content-Type' : 'text/html; charset=utf-8'});
+                res.end(`<h1>LocalAdress</h1>`);
+              });
+          }
+          else if (url.parse(req.url).pathname === '/req-data')
+          {
+
+          }
+          else if (url.parse(req.url).pathname === '/formparameter')
+          {
+
+          }
+          else if (url.parse(req.url).pathname === '/json')
+          {
+
+          }
+          else if (url.parse(req.url).pathname === '/upload')
+          {
+
+          }
+          else if (url.parse(req.url).pathname === '/files')
+          {
+
+          }
+
           else HTTP405(req, res); break;
 
     }
@@ -119,8 +148,10 @@ let http_handler = (req, res) =>
     }
 }
 
-app.listen(PORT, HOST, () =>
+server.listen(PORT, () =>
 {
-    const URL = `http://${HOST}:${PORT}`;
+    const URL = `http://localhost:${PORT}`;
     console.log('Listening on ' + URL);
-}).on('request', http_handler);
+})
+  .on('error', (e) => {console.log(`${URL} | error: ${e.code}`)})
+  .on('request', http_handler);
