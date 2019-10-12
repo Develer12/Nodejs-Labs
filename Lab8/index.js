@@ -4,7 +4,6 @@ var url = require("url");
 
 const PORT = 5000;
 let server = http.createServer();
-server.KeepAliveTimeout = 10000;
 
 let HTTP404 = (req, res) =>
 {
@@ -37,19 +36,26 @@ let Get_handler = (req, res) =>
               let set = parseInt(url.parse(req.url, true).query.set);
               if (Number.isInteger(set))
               {
+                  console.log('Set connection');
                   res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
                   server.KeepAliveTimeout = set;
                   res.end(`KeepAliveTimeout = ${server.KeepAliveTimeout}`);
               }
               else
               {
+                console.log('Get connection');
                 res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
                 res.end(`KeepAliveTimeout = ${server.KeepAliveTimeout}`);
               }
           }
           else if (url.parse(req.url).pathname === '/headers')
           {
-
+            console.log('Get headers');
+            res.writeHead(200, {'Content-Type' : 'text/html; charset=utf-8'});
+            for(key in req.headers)
+              res.write(`<h3>request: ${key}: ${req.headers[key]}</h3>`);
+            for(key in res.getHeaders())
+              res.write(`<h3>response: ${res.getHeaders()}</h3>`);
           }
           else if (url.parse(req.url).pathname === '/close')
           {
@@ -64,12 +70,24 @@ let Get_handler = (req, res) =>
               {
                 console.log('Get socket');
                 res.writeHead(200, {'Content-Type' : 'text/html; charset=utf-8'});
-                res.end(`<h1>LocalAdress</h1>`);
+                res.write(`<h3>LocalAddress = ${socket.localAddress}</h3>`);
+                res.write(`<h3>LocalPort = ${socket.localPort}</h3>`);
+                res.write(`<h3>RemoteAddress = ${socket.remoteAddress}</h3>`);
+                res.write(`<h3>RemoteFamily = ${socket.remoteFamily}</h3>`);
+                res.write(`<h3>RemotePort = ${socket.remotePort}</h3>`);
+                res.end(`<h3>BytesWritten = ${socket.bytesWritten}</h3>`);
+
               });
           }
           else if (url.parse(req.url).pathname === '/req-data')
           {
-
+            let data = [];
+            req.on('data', chunk => data.push(chunk));
+            req.on('end', () =>
+            {
+              console.log(data);
+              res.end();
+            });
           }
           else if (url.parse(req.url).pathname === '/formparameter')
           {
@@ -111,7 +129,7 @@ let Get_handler = (req, res) =>
 let Post_handler = (req, res) =>
 {
     let result = '';
-    let fname = 't.txt';
+    let fname = req.file.originalname;
     req.on('data', (data)=>{result+=data;});
     fname = req.text;
     req.on('end', () =>
@@ -125,7 +143,7 @@ let Post_handler = (req, res) =>
         fs.writeFile(__dirname +'/files/' + fname, result, (err) =>
         {
             if (err) throw err;
-              console.log('The file has been saved!');
+            console.log('The file has been saved!');
         });
     });
 }
