@@ -31,55 +31,6 @@ let Get_handler = (req, res) =>
           res.end(fs.readFileSync(__dirname + '/file/f.png'));
           break;
       }
-      case '/file/f.docx':
-      {
-          console.log('Get Word');
-          res.writeHead(200, {'Content-Type' : 'application/msword; charset=utf-8'});
-          res.end(fs.readFileSync(__dirname + '/file/f.docx'));
-          break;
-      }
-      case '/file/f.css':
-      {
-          console.log('Get CSS');
-          res.writeHead(200, {'Content-Type' : 'text/css; charset=utf-8'});
-          res.end(fs.readFileSync(__dirname + '/file/f.css'));
-          break;
-      }
-      case '/file/f.html':
-      {
-          console.log('Get HTML');
-          res.writeHead(200, {'Content-Type' : 'text/html; charset=utf-8'});
-          res.end(fs.readFileSync(__dirname + '/file/f.html'));
-          break;
-      }
-      case '/file/f.js':
-      {
-          console.log('Get JS');
-          res.writeHead(200, {'Content-Type' : 'text/javascript; charset=utf-8'});
-          res.end(fs.readFileSync(__dirname + '/file/f.js'));
-          break;
-      }
-      case '/file/f.xml':
-      {
-          console.log('Get XML');
-          res.writeHead(200, {'Content-Type' : 'application/xml; charset=utf-8'});
-          res.end(fs.readFileSync(__dirname + '/file/f.xml'));
-          break;
-      }
-      case '/file/f.json':
-      {
-          console.log('Get JSON');
-          res.writeHead(200, {'Content-Type' : 'application/json; charset=utf-8'});
-          res.end(fs.readFileSync(__dirname + '/file/f.json'));
-          break;
-      }
-      case '/file/f.mp4':
-      {
-          console.log('Get MP4');
-          res.writeHead(200, {'Content-Type' : 'video/mp4; charset=utf-8'});
-          res.end(fs.readFileSync(__dirname + '/file/f.mp4'));
-          break;
-      }
       default:
           if (url.parse(req.url).pathname === '/connection')
           {
@@ -102,7 +53,10 @@ let Get_handler = (req, res) =>
           }
           else if (url.parse(req.url).pathname === '/close')
           {
-
+             res.writeHead(200, {'Content-Type' : 'text/html; charset=utf-8'});
+             res.end(`<h1>Server will be closed after 10 sec.</h1>`);
+             console.log("Server will be closed after 10 sec");
+             setTimeout(() => server.close(() => console.log("Server closed")), 10000);
           }
           else if (url.parse(req.url).pathname === '/socket')
           {
@@ -127,11 +81,26 @@ let Get_handler = (req, res) =>
           }
           else if (url.parse(req.url).pathname === '/upload')
           {
-
+            console.log('Get Upload');
+            res.writeHead(200, {'Content-Type' : 'text/html; charset=utf-8'});
+            res.end(fs.readFileSync(__dirname + "/Update.html"));
           }
           else if (url.parse(req.url).pathname === '/files')
           {
 
+          }
+          else if (url.parse(req.url).pathname.includes('/files/'))
+          {
+            fname = url.parse(req.url).pathname;
+            if(!fs.existsSync(__dirname + fname))
+              HTTP404(req, res);
+            else
+            {
+              console.log('Get file name');
+              res.writeHead(200, {'Content-Type' : 'text/palin; charset=utf-8'});
+              res.end(fs.readFileSync(__dirname + fname));
+            }
+            break;
           }
 
           else HTTP405(req, res); break;
@@ -139,11 +108,34 @@ let Get_handler = (req, res) =>
     }
 }
 
+let Post_handler = (req, res) =>
+{
+    let result = '';
+    let fname = 't.txt';
+    req.on('data', (data)=>{result+=data;});
+    fname = req.text;
+    req.on('end', () =>
+    {
+        console.log('File Upload');
+        console.log('File ' + fname);
+
+        res.writeHead(200, {'Content-Type' : 'text/html; charset=utf-8'});
+        res.write(`<h1>File Upload</h1>`);
+        res.end(result);
+        fs.writeFile(__dirname +'/files/' + fname, result, (err) =>
+        {
+            if (err) throw err;
+              console.log('The file has been saved!');
+        });
+    });
+}
+
 let http_handler = (req, res) =>
 {
     switch (req.method)
     {
       case 'GET': Get_handler(req, res); break;
+      case 'POST': Post_handler(req, res); break;
       default: HTTP404(req, res); break;
     }
 }
