@@ -2,10 +2,12 @@ const fs = require('fs');
 var url = require("url");
 const bodyParser = require('body-parser');
 const express = require('express');
+const fUpload = require('express-fileupload');
 
 
 const app = express();
 app.use(bodyParser.json());
+app.use(fUpload({createParentPaths : true}));
 
 const PORT = 5000;
 const HOST = 'localhost';
@@ -49,7 +51,7 @@ app.get('/headers', (req, res) =>
     for(key in req.headers)
       res.write(`<h3>request: ${key}: ${req.headers[key]}</h3>`);
     for(key in res.getHeaders())
-      res.write(`<h3>response: ${res.getHeaders()}</h3>`);
+      res.write(`<h3>response: ${key}: ${res.getHeaders[key]}</h3>`);
 });
 
 app.get('/close', (req, res) =>
@@ -62,7 +64,7 @@ app.get('/close', (req, res) =>
 
 app.get('/socket', (req, res) =>
 {
-    app.on('connection', (socket) =>
+    server.on('connection', (socket) =>
       {
         console.log('Get socket');
         res.writeHead(200, {'Content-Type' : 'text/html; charset=utf-8'});
@@ -91,6 +93,22 @@ app.get('/formparameter', (req, res) =>
 
 });
 
+app.post('/xml', (req, res) => {
+    let xml = req.body;
+    console.log(JSON.stringify(xml));
+    res.setHeader('Content-Type', 'text/xml');
+    let sum = 0;
+    let text = '';
+    xml.req.x.forEach(x => sum += Number(x.$.value));
+    xml.req.m.forEach(m => text += m.$.value);
+    let responseText = `
+        <res="${xml.req.$.id}">
+        <sum element="x" result="${sum}"></sum>
+        <text element="m" result="${text}"></text>
+        </res>`;
+    res.end(responseText);
+});
+
 app.get('/upload', (req, res) =>
 {
     console.log('Get Upload');
@@ -110,17 +128,18 @@ app.get('/files', (req, res) =>
         res.end();
       });
     }
-    else if (url.parse(req.url).pathname.includes('/files/'))
+});
+
+app.get('/files/:fname', (req, res) =>
+{
+    fname = url.parse(req.url).pathname;
+    if(!fs.existsSync(__dirname + fname))
+      HTTP404(req, res);
+    else
     {
-      fname = url.parse(req.url).pathname;
-      if(!fs.existsSync(__dirname + fname))
-        HTTP404(req, res);
-      else
-      {
-        console.log('Get file name');
-        res.writeHead(200, {'Content-Type' : 'text/palin; charset=utf-8'});
-        res.end(fs.readFileSync(__dirname + fname));
-      }
+      console.log('Get file name');
+      res.writeHead(200, {'Content-Type' : 'text/palin; charset=utf-8'});
+      res.end(fs.readFileSync(__dirname + fname));
     }
 });
 
@@ -148,23 +167,17 @@ app.post('/json', (req, res) =>
 app.post('/upload', (req, res) =>
 {
   let result = '';
-  let fname = req.file.originalname;
-  req.on('data', (data)=>{result+=data;});
-  fname = req.text;
-  req.on('end', () =>
-  {
-      console.log('File Upload');
-      console.log('File ' + fname);
-
-      res.writeHead(200, {'Content-Type' : 'text/html; charset=utf-8'});
-      res.write(`<h1>File Upload</h1>`);
-      res.end(result);
-      fs.writeFile(__dirname +'/files/' + fname, result, (err) =>
-      {
-          if (err) throw err;
-          console.log('The file has been saved!');
-      });
-  });
+  let fname = '';
+    let File = req.files.file;
+    result+=File.data;
+    res.writeHead(200, {'Content-Type' : 'text/html; charset=utf-8'});
+    res.write(`<h1>File Upload</h1>`);
+    res.end(result);
+    File.mv(__dirname + '/files/' + File.name, (err) =>
+    {
+        if (err) throw err;
+        console.log('The file has been saved!');
+    });
 });
 
 const server = app.listen(PORT, HOST, () => {
