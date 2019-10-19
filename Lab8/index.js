@@ -88,12 +88,53 @@ app.get('/req-data', (req, res) =>
     });
 });
 
-app.get('/formparameter', (req, res) =>
-{
-
+app.get('/resp-status', (req, res) => {
+    res.statusCode = req.query.code;
+    res.statusMessage = req.query.mess;
+    res.end();
 });
 
-app.post('/xml', (req, res) => {
+app.get('/formparameter', (req, res) =>
+{
+    res.sendFile(__dirname + '/files/Formparameter.html');
+});
+app.post('/formparameter', (req, res) =>
+{
+    console.log(JSON.stringify(req.body));
+    res.json(req.body);
+});
+
+app.get('/parameter', (req, res) =>
+{
+    let x = Number(req.query.x);
+    let y = Number(req.query.y);
+    parameterHandler(x, y, res);
+});
+app.get('/parameter/:x/:y', (req, res) =>
+{
+    let x = Number(req.params.x);
+    let y = Number(req.params.y);
+    parameterHandler(x, y, res);
+});
+
+function parameterHandler(x, y, res)
+{
+    if (Number.isInteger(x) && Number.isInteger(y))
+    {
+        res.json(
+          {
+            add: x + y,
+            sub: x - y,
+            mult: x * y,
+            div: x / y
+        });
+    }
+    else
+        res.json({message: 'Wrong data'});
+}
+
+app.post('/xml', (req, res) =>
+{
     let xml = req.body;
     console.log(JSON.stringify(xml));
     res.setHeader('Content-Type', 'text/xml');
