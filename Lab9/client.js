@@ -1,5 +1,6 @@
 let http = require('http');
 let query = require('querystring');
+let fs = require('fs');
 
 
 let path = `/getinfo`;
@@ -46,6 +47,27 @@ const req3 = http.request(options, (res) =>
 });
 
 
+options.path = `/xml`;
+
+const req4 = http.request(options, (res) =>
+{
+    console.log('------------TASK5------------');
+    let f = fs.readFileSync(__dirname + '/files/f.xml');
+    res.post = f;
+    console.log('Result: ' + JSON.stringify(res.data));
+});
+
+
+options.path = `/json`;
+
+const req5 = http.request(options, (res) =>
+{
+    console.log('------------TASK4------------');
+    console.log('Result: ' + JSON.stringify(res.data));
+});
+
 req1.end();
 req2.end();
 req3.end();
+req4.end();
+req5.end();
