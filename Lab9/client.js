@@ -20,54 +20,66 @@ const req1 = http.request(options, (res) =>
     console.log(`StatusMessage: ${res.statusMessage}`);
     console.log(`RemoteAddress: ${req1.connection.remoteAddress}`);
     console.log(`RemotePort: ${req1.connection.remotePort}`);
-    console.log('Body: ' + JSON.stringify(res.body));
+    let data = '';
+    res.on('data', (chunk) =>{console.log('Data: ', data += chunk.toString('utf8'));});
 });
 
 
 param = query.stringify({x:3, y: 4});
 options.path = `/xy?${param}`;
-
 const req2 = http.request(options, (res) =>
 {
     console.log('------------TASK2------------');
     console.log('Status: ' + res.statusCode + '. ' + res.statusMessage);
-    console.log('Parameters: ' + JSON.stringify(res.data));
+    let data = '';
+    res.on('data', (chunk) =>{console.log('Parameters: ', data += chunk.toString('utf8'));});
 });
 
 
 param = query.stringify({x:3, y: 4, s: 'Dada'});
 options.path = `/xys?${param}`;
 options.method = 'POST';
-
 const req3 = http.request(options, (res) =>
 {
     console.log('------------TASK3------------');
     console.log('Status: ' + res.statusCode + '. ' + res.statusMessage);
-    console.log('Parameters: ' + JSON.stringify(res.data));
-});
-
-
-options.path = `/xml`;
-
-const req4 = http.request(options, (res) =>
-{
-    console.log('------------TASK5------------');
-    let f = fs.readFileSync(__dirname + '/files/f.xml');
-    res.post = f;
-    console.log('Result: ' + JSON.stringify(res.data));
+    let data = '';
+    res.on('data', (chunk) =>{console.log('Parameters: ', data += chunk.toString('utf8'));});
 });
 
 
 options.path = `/json`;
-
+options.headers = {'Content-Type': 'application/json', 'accept': 'application/json'};
 const req5 = http.request(options, (res) =>
 {
     console.log('------------TASK4------------');
-    console.log('Result: ' + JSON.stringify(res.data));
+    let data = '';
+    res.on('data', (chunk) =>{console.log('JSON: ', data += chunk.toString('utf8'));});
+});
+
+
+options.path = `/xml`;
+options.headers = {'Content-Type': 'text/xml', 'accept': 'text/xml'};
+const req4 = http.request(options, (res) =>
+{
+    console.log('------------TASK5------------');
+    let data = '';
+    res.on('data', (chunk) =>{console.log('XML: \n', data += chunk.toString('utf8'));});
+});
+
+
+options.path = `/txt`;
+options.headers = {'Content-Type': 'text/plain', 'accept': 'text/plain'};
+const req6 = http.request(options, (res) =>
+{
+    console.log('------------TASK6------------');
+    let data = '';
+    res.on('data', (chunk) =>{console.log('TXT: \n', data += chunk.toString('utf8'));});
 });
 
 req1.end();
 req2.end();
 req3.end();
-req4.end();
-req5.end();
+req4.end(fs.readFileSync(__dirname + '/files/f.xml'));
+req5.end(fs.readFileSync(__dirname + '/files/f.json'));
+req6.end(fs.readFileSync(__dirname + '/files/f.txt'));
