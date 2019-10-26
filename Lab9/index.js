@@ -2,6 +2,8 @@ var url = require("url");
 const express = require('express');
 const bodyParser = require('body-parser');
 const xmlBodyParser = require('express-xml-bodyparser');
+let fs = require('fs');
+
 
 
 const app = express();
@@ -75,20 +77,27 @@ app.post('/json', (req, res) =>
     });
 });
 
-app.post('/png', (req, res) =>
-{
-
-});
-
 app.post('/txt', (req, res) =>
 {
-    res.setHeader('Content-Type', 'text/plain');
-    let txt = req.body;
-    console.log(txt);
-    res.send(txt);
+    let txt = '';
+    req.on('data', (chunk) =>
+        {
+          txt+= chunk.toString('utf8');
+          res.end(txt);
+        });
+});
+
+app.post('/png', (req, res) =>
+{
+    let png = '';
+    req.on('data', (chunk) =>
+        {
+          png+= chunk.toString('utf8');
+          res.end(png);
+        });
 });
 
 app.get('/getfile', (req, res) =>
 {
-
+    res.sendFile(__dirname + '/files/f.txt');
 });

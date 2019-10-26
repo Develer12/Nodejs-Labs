@@ -77,9 +77,32 @@ const req6 = http.request(options, (res) =>
     res.on('data', (chunk) =>{console.log('TXT: \n', data += chunk.toString('utf8'));});
 });
 
+
+options.path = `/png`;
+options.headers = {'Content-Type' : 'image/png', 'accept' : 'image/png'};
+const req7 = http.request(options, (res) =>
+{
+    console.log('------------TASK7------------');
+    let data = '';
+    res.on('data', (chunk) =>{console.log('PNG here');});
+});
+
+
+options.path = `/getfile`;
+options.headers = {'Content-Type': 'text/plain', 'accept': 'text/plain'};
+options.method = 'GET';
+const req8 = http.request(options, (res) =>
+{
+    console.log('------------TASK8------------');
+    let data = '';
+    res.on('data', (chunk) =>{console.log('File: \n', data += chunk.toString('utf8'));});
+});
+
 req1.end();
 req2.end();
 req3.end();
 req4.end(fs.readFileSync(__dirname + '/files/f.xml'));
 req5.end(fs.readFileSync(__dirname + '/files/f.json'));
 req6.end(fs.readFileSync(__dirname + '/files/f.txt'));
+req7.end(fs.readFileSync(__dirname + '/files/f.png'));
+req8.end();
