@@ -3,10 +3,13 @@ var url = require("url");
 const bodyParser = require('body-parser');
 const express = require('express');
 const fUpload = require('express-fileupload');
+const xmlBodyParser = require('express-xml-bodyparser');
+
 
 
 const app = express();
 app.use(bodyParser.json());
+app.use(xmlBodyParser({}));
 app.use(fUpload({createParentPaths : true}));
 
 const PORT = 5000;
