@@ -1,0 +1,25 @@
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Lab 10. Star WebSocket</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      let k = 0;
+      function startWS()
+      {
+          let socket = new WebSocket('ws:/localhost:4000/wsserv');
+          socket.onopen = () =>
+          {
+              console.log('Open socket');
+              setInterval(()=>{socket.send(++k);}, 1000);
+          };
+          socket.onclose = (e) => {console.log('Close socket ', e);};
+          socket.onmessage = (e) => {console.log('Message socket ', e.data);};
+          socket.onerror = fanction(e) {alert("Error: " + error.message);};
+      };
+    </script>
+
+    <button type="button" name="button" onclick="startWS">WS Start</button>
+  </body>
+</html>
