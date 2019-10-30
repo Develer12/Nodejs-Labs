@@ -8,18 +8,20 @@
       let k = 0;
       function startWS()
       {
+          let timer = ' ';
           let socket = new WebSocket('ws:/localhost:4000/wsserv');
           socket.onopen = () =>
           {
               console.log('Open socket');
-              setInterval(()=>{socket.send(++k);}, 1000);
+              timer = setInterval(()=>{socket.send(++k)}, 3000);
+              setTimeout(() => {clearInterval(timer); socket.close()}, 25000);
           };
-          socket.onclose = (e) => {console.log('Close socket ', e);};
-          socket.onmessage = (e) => {console.log('Message socket ', e.data);};
-          socket.onerror = fanction(e) {alert("Error: " + error.message);};
+          socket.onclose = (e) => {console.log('Close socket ', e)};
+          socket.onmessage = (e) => {console.log('Message socket ', e.data)};
+          socket.onerror = function(e) {alert("Error: " + error.message)};
       };
     </script>
 
-    <button type="button" name="button" onclick="startWS">WS Start</button>
+    <button type="button" name="button" onclick="startWS()">WS Start</button>
   </body>
 </html>

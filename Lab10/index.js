@@ -23,12 +23,16 @@ app.get('/start', (req, res) =>
 });
 
 let k = 0;
+let mess = 0;
 wsserv.on('connection', (ws) =>
 {
+    console.log('WS connection');
     ws.on('message', message =>
     {
-        console.log(`Message=> ${message}`);
+        mess = message;
+        console.log(`client=> ${message}; server=> ${k}`);
     });
-    setInterval(()=> {ws.send(`server: ${++k}`), 1500});
+    let timer = setInterval(()=> ws.send(`10-01-server: ${mess}->${k++}`), 5000);
+
 })
 .on('error', (e)=> {console.log('WS server error ', e);});
