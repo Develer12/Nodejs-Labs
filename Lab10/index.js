@@ -7,6 +7,7 @@ const HOST = 'localhost';
 
 const app = express();
 const wsserv = new WebSocket.Server({port: 4000, host: HOST, path: '/wsserv'});
+const wsbroad = new WebSocket.Server({port: 5000, host: HOST, path: '/broadcast'});
 
 
 const server = app.listen(PORT, HOST, () =>
@@ -31,6 +32,20 @@ wsserv.on('connection', (ws) =>
     {
         mess = message;
         console.log(`client=> ${message}; server=> ${k}`);
+    });
+    let timer = setInterval(()=> ws.send(`10-01-server: ${mess}->${k++}`), 5000);
+
+})
+.on('error', (e)=> {console.log('WS server error ', e);});
+
+let client = 0;
+wsserv.on('connection', (ws) =>
+{
+    client++;
+    console.log('WS broadcast connection');
+    ws.on('message', message =>
+    {
+        console.log(`client ${client}=> ${message}`);
     });
     let timer = setInterval(()=> ws.send(`10-01-server: ${mess}->${k++}`), 5000);
 

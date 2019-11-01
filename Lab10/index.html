@@ -20,8 +20,25 @@
           socket.onmessage = (e) => {console.log('Message socket ', e.data)};
           socket.onerror = function(e) {alert("Error: " + error.message)};
       };
+
+
+      let client = 0;
+      function broadcastWS()
+      {
+          let broadcast = new WebSocket('ws:/localhost:5000/broadcast')
+          let timer = ' ';
+
+          broadcast.onmessage = (e) => {console.log("Message server: ", e.data);};
+          broadcast.onopen = () =>
+          {
+              console.log('Open broadcast');
+              timer = setInterval(()=>{broadcast.send("Hi")}, 3000);
+              setTimeout(() => {clearInterval(timer); broadcast.close()}, 25000);
+          };
+      };
     </script>
 
     <button type="button" name="button" onclick="startWS()">WS Start</button>
+    <button type="button" name="button" onclick="broadcastWS()">WS Start</button>
   </body>
 </html>
