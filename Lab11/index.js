@@ -6,8 +6,8 @@ const PORT = 3000;
 const HOST = 'localhost';
 
 const app = express();
-const wsserv = new WebSocket.Server({port: 4000, host: HOST, path: '/wsserv'});
-const wsbroad = new WebSocket.Server({port: 5000, host: HOST, path: '/broadcast'});
+const wsupload = new WebSocket.Server({port: 4000, host: HOST});
+const wsload = new WebSocket.Server({port: 5000, host: HOST});
 
 
 const server = app.listen(PORT, HOST, () =>
@@ -18,27 +18,24 @@ const server = app.listen(PORT, HOST, () =>
 .on('error', (e) => {console.log(`${URL} | error: ${e.code}`)});
 
 
-app.get('/start', (req, res) =>
+app.get('/', (req, res) =>
 {
-    res.end(fs.readFileSync(__dirname + "/index.html"));
+    res.end(fs.readFileSync(__dirname + "/Upload.html"));
 });
 
-let k = 0;
-let mess = 0;
-wsserv.on('connection', (ws) =>
-{
-    console.log('WS connection');
-    ws.on('message', message =>
-    {
-        mess = message;
-        console.log(`client=> ${message}; server=> ${k}`);
-    });
-    let timer = setInterval(()=> ws.send(`10-01-server: ${mess}->${k++}`), 5000);
 
+let k = 0;
+wsupload.on('connection', (ws) =>
+{
+    console.log('Upload started');
+    const duplex = WebSocket.createWebSocketStream(wsupload, {encoding: 'utf8'});
+    let uf = fs.createWriteStream(`./files/${k++}.txt`);
+    duplex.pipe(uf);
 })
 .on('error', (e)=> {console.log('WS server error ', e);});
 
-wsbroad.on('connection', (ws) =>
+
+wsload.on('connection', (ws) =>
 {
     console.log('WS broadcast connection');
     ws.on('message', message =>
@@ -52,7 +49,7 @@ wsbroad.on('connection', (ws) =>
     });
 });
 
-wsbroad.on('open', () =>
+wsload.on('open', () =>
 {
     let timer = ' ';
     let k = 0;
