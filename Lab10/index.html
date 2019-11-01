@@ -25,8 +25,12 @@
       let client = 0;
       function broadcastWS()
       {
-          let broadcast = new WebSocket('ws:/localhost:5000/broadcast')
+          const broadcast = new WebSocket('ws:/localhost:5000/broadcast')
           let timer = ' ';
+
+          //const duplex = WebSocket.createWebSocketStream(broadcast);
+          //duplex.pipe(process.stdout);
+          //process.stdin.pipe(duplex);
 
           broadcast.onmessage = (e) => {console.log("Message server: ", e.data);};
           broadcast.onopen = () =>
@@ -39,6 +43,6 @@
     </script>
 
     <button type="button" name="button" onclick="startWS()">WS Start</button>
-    <button type="button" name="button" onclick="broadcastWS()">WS Start</button>
+    <button type="button" name="button" onclick="broadcastWS()">Broadcast Start</button>
   </body>
 </html>

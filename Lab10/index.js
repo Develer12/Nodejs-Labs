@@ -38,16 +38,30 @@ wsserv.on('connection', (ws) =>
 })
 .on('error', (e)=> {console.log('WS server error ', e);});
 
-let client = 0;
-wsserv.on('connection', (ws) =>
+wsbroad.on('connection', (ws) =>
 {
-    client++;
     console.log('WS broadcast connection');
     ws.on('message', message =>
     {
-        console.log(`client ${client}=> ${message}`);
+        wsbroad.clients.forEach((client)=>
+        {
+            console.log('Client message: ' + message);
+            if(client.readyState === WebSocket.OPEN)
+                client.send('Server ' + message)
+        });
     });
-    let timer = setInterval(()=> ws.send(`10-01-server: ${mess}->${k++}`), 5000);
+});
 
+wsbroad.on('open', () =>
+{
+    let timer = ' ';
+    let k = 0;
+    timer = setInterval(() => wsbroad.send(`Client: -${k++}`));
+    wsbroad.on('message', (message) =>
+    {
+        console.log(`Received message => ${message}`);
+    });
+
+    setTimeout(() => { clearInterval(timer); wsbroad.close();}, 25000);
 })
 .on('error', (e)=> {console.log('WS server error ', e);});
