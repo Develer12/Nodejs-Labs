@@ -18,18 +18,12 @@ const server = app.listen(PORT, HOST, () =>
 .on('error', (e) => {console.log(`${URL} | error: ${e.code}`)});
 
 
-app.get('/', (req, res) =>
-{
-    res.end(fs.readFileSync(__dirname + "/Upload.html"));
-});
-
-
 let k = 0;
 wsupload.on('connection', (ws) =>
 {
     console.log('Upload started');
     const duplex = WebSocket.createWebSocketStream(wsupload, {encoding: 'utf8'});
-    let uf = fs.createWriteStream(`./files/${k++}.txt`);
+    let uf = fs.createWriteStream(__dirname +`/files/${k++}.txt`);
     duplex.pipe(uf);
 })
 .on('error', (e)=> {console.log('WS server error ', e);});
