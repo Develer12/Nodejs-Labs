@@ -11,3 +11,15 @@ ws.on('open', () =>
   uf.pipe(duplex);
 })
 .on('error', (e)=> {console.log('WS server error ', e);});
+
+
+const wsload = new WebSocket('ws:/localhost:5000/download');
+let k = 0;
+wsload.on('open', () =>
+{
+    console.log('Download started');
+    const duplex = WebSocket.createWebSocketStream(wsload, {encoding: 'utf8'});
+    let uf = fs.createWriteStream(__dirname +`/files/${k++}load.txt`);
+    duplex.pipe(uf);
+})
+.on('error', (e)=> {console.log('WS server error ', e);});
