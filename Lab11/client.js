@@ -23,3 +23,13 @@ wsload.on('open', () =>
     duplex.pipe(uf);
 })
 .on('error', (e)=> {console.log('WS server error ', e);});
+
+
+const wspong = new WebSocket('ws:/localhost:4001');
+wspong.on('pong', (data) =>
+{
+    console.log('Pong started');
+    wspong.ping(1);
+})
+.on('error', (e)=> {console.log('WS server error ', e);});
+wspong.onmessage = (e) => {console.log("Message server: ", e.data);};
