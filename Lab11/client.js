@@ -1,5 +1,7 @@
 let fs = require('fs');
 const WebSocket = require('ws');
+const rpc = require('rpc-websockets').Client;
+
 
 
 const ws = new WebSocket('ws:/localhost:4000');
@@ -33,3 +35,13 @@ wspong.on('pong', (data) =>
 })
 .on('error', (e)=> {console.log('WS server error ', e);});
 wspong.onmessage = (e) => {console.log("Message server: ", e.data);};
+
+
+const name = process.argv[2];
+const wsrpc = new WebSocket('ws:/localhost:4002');
+wsrpc.onopen = () =>
+{
+    let message = {client: name, timestamp: Date.now()};
+    wsrpc.send(JSON.stringify(message));
+};
+wsrpc.onmessage = message => {console.log(message.data);};

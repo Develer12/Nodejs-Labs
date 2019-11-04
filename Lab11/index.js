@@ -1,6 +1,8 @@
 const express = require('express');
 let fs = require('fs');
 const WebSocket = require('ws');
+const RPC = require('rpc-websockets').Server;
+
 
 const PORT = 3000;
 const HOST = 'localhost';
@@ -9,6 +11,8 @@ const app = express();
 const wsupload = new WebSocket.Server({port: 4000, host: HOST});
 const wsload = new WebSocket.Server({port: 5000, host: HOST, path: '/download'});
 const wspipo = new WebSocket.Server({port: 4001, host: HOST});
+const wsrpc = new WebSocket.Server({port: 4002, host: HOST});
+
 
 
 const server = app.listen(PORT, HOST, () =>
