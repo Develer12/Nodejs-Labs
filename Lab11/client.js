@@ -37,11 +37,11 @@ wspong.on('pong', (data) =>
 wspong.onmessage = (e) => {console.log("Message server: ", e.data);};
 
 
-const name = process.argv[2];
+let name = 0;
 const wsrpc = new WebSocket('ws:/localhost:4002');
 wsrpc.onopen = () =>
 {
-    let message = {client: name, timestamp: Date.now()};
+    let message = {client: ++name, timestamp: new Date()};
     wsrpc.send(JSON.stringify(message));
 };
 wsrpc.onmessage = message => {console.log(message.data);};

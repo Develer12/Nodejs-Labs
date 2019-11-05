@@ -11,7 +11,8 @@ const app = express();
 const wsupload = new WebSocket.Server({port: 4000, host: HOST});
 const wsload = new WebSocket.Server({port: 5000, host: HOST, path: '/download'});
 const wspipo = new WebSocket.Server({port: 4001, host: HOST});
-const wsrpc = new WebSocket.Server({port: 4002, host: HOST});
+const wsjson = new WebSocket.Server({port: 4002, host: HOST});
+const wsrpc = new WebSocket.Server({port: 4003, host: HOST});
 
 
 
@@ -71,5 +72,17 @@ wspipo.on('connection', (ws) =>
               client.send('Server:' + n++);
       });
     }, 15000);
+})
+.on('error', (e)=> {console.log('WS server error ', e);});
+
+let messnum = 0;
+wsjson.on('connection', (ws)=>
+{
+    ws.on('message', (message)=>
+    {
+        let {client: name, timestamp: date} = JSON.parse(message);
+        let postoffice = {num: ++messnum, client: name, timestamp: date};
+        ws.send(JSON.stringify(postoffice));
+    });
 })
 .on('error', (e)=> {console.log('WS server error ', e);});
