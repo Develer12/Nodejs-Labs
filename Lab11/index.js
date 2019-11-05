@@ -3,7 +3,6 @@ let fs = require('fs');
 const WebSocket = require('ws');
 const RPC = require('rpc-websockets').Server;
 
-
 const PORT = 3000;
 const HOST = 'localhost';
 
@@ -12,8 +11,9 @@ const wsupload = new WebSocket.Server({port: 4000, host: HOST});
 const wsload = new WebSocket.Server({port: 5000, host: HOST, path: '/download'});
 const wspipo = new WebSocket.Server({port: 4001, host: HOST});
 const wsjson = new WebSocket.Server({port: 4002, host: HOST});
-const wsrpc = new WebSocket.Server({port: 4003, host: HOST});
-
+const wsrpc = new RPC({port: 4003, host: HOST});
+const wsevent = new RPC({port: 4004, host: HOST});
+const wsnotif = new RPC({port: 4005, host: HOST});
 
 
 const server = app.listen(PORT, HOST, () =>
@@ -86,3 +86,50 @@ wsjson.on('connection', (ws)=>
     });
 })
 .on('error', (e)=> {console.log('WS server error ', e);});
+
+wsrpc.setAuth(credentials => credentials.login === 'admin' && credentials.password === 'admin');
+wsrpc.register('sum', params => params.reduce((a, b) => a + b, 0)).public();
+wsrpc.register('mul', params => params.reduce((a, b) => a * b, 1)).public();
+wsrpc.register('square', square).public();
+wsrpc.register('fib', fib).protected();
+wsrpc.register('fact', fact).protected();
+
+function square(args)
+{
+    if (args.length === 1) return Math.PI * Math.pow(args[0], 2);
+    else if (args.length === 2) return args[0] * args[1];
+    else return 0;
+}
+function fib(n)
+{
+    let currentSize = 0;
+    let numbers = [];
+    let curr = 1;
+    let next = 1;
+    while (currentSize < n)
+    {
+        numbers.push(curr + next);
+        next += curr;
+        curr = next - curr;
+        currentSize++;
+    }
+    return numbers;
+}
+function fact(n) {return n === 1 ? 1 : n * fact(n - 1);}
+
+
+wsevent.event('A');
+wsevent.event('B');
+wsevent.event('C');
+console.log('Input A, B or C to start event');
+let input = process.stdin;
+input.setEncoding('utf-8');
+input.on('data', data => {
+    wsevent.emit(data);
+    process.stdout.write('Sended');
+});
+
+
+wsnotif.register('A', () => console.log('A notification was received')).public();
+wsnotif.register('B', () => console.log('B notification was received')).public();
+wsnotif.register('C', () => console.log('C notification was received')).public();
