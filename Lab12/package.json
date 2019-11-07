@@ -2,8 +2,7 @@
   "name": "lab12",
   "version": "1.0.0",
   "author": "Develer12",
-  "dependencies":
-  {
+  "dependencies": {
     "express": "^4.17.1",
     "body-parser": "^1.19.0"
   }
