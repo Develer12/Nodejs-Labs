@@ -136,5 +136,61 @@ app.delete('/:n', (req, res) =>
 app.delete('/backup/:yyyyddmm', (req, res) =>
 {
     let date = req.params.yyyyddmm;
+    fs.readdir(__dirname + '/backups', (err, files) =>
+    {
+        if (err)
+        {
+            res.statusCode = 500;
+            res.json({error: err.message});
+            throw err;
+        }
+
+        let BackupDate = dateSlice(date);
+
+        files.forEach(file =>
+        {
+            console.log(BackupDate+' '+fBackupDate);
+            if (BackupDate > fBackupDate)
+            {
+                fs.unlink(__dirname + '/backups/' + file, err =>
+                {
+                    if (err)
+                    {
+                        res.statusCode = 500;
+                        res.body = JSON.stringify({error: err.message});
+                        throw err;
+                    }
+                })
+            }
+        });
+        res.end();
+    });
 
 });
+
+function dateSlice(date)
+{
+    let year = '', month = '', day = '';
+    let hour = '', minute = '', second = '';
+
+    for (let i = 0; i < date.length; i++)
+    {
+        if (i < 4)
+            year += date.charAt(i);
+        else if (i < 6)
+            month += date.charAt(i);
+        else if (i < 8)
+            day += date.charAt(i);
+        else if (i < 10)
+            hour += date.charAt(i);
+        else if (i < 12)
+            minute += date.charAt(i);
+        else if (i < 14)
+            second += date.charAt(i);
+    }
+
+    let arr = [year, month, day, hour, minute, second];
+    let fdate = new Date(Number(arr[0]), Number(arr[1]), Number(arr[2]),
+                          Number(arr[3]), Number(arr[4]), Number(arr[5]));
+    return fdate;
+}
