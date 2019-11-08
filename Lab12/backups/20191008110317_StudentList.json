@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "name": "Matsiukh A.A.",
+    "bday": "1999-10-28",
+    "speciality": "POIT"
+  },
+  {
+    "id": 2,
+    "name": "Ivanov I.I.",
+    "bday": "2000-03-21",
+    "speciality": "ISIT"
+  },
+  {
+    "id": 3,
+    "name": "Loxa L.I.",
+    "bday": "1989-10-01",
+    "speciality": "MOBI"
+  }
+]

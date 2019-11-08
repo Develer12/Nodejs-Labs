@@ -72,7 +72,17 @@ app.post('/', (req, res) =>
 
 app.post('/backup', (req, res) =>
 {
-
+    let cur = new Date();
+    let date = addZero(cur.getFullYear())+addZero(cur.getMonth())+
+               addZero(cur.getDate())+addZero(cur.getHours())+
+               addZero(cur.getMinutes())+addZero(cur.getSeconds());
+    function addZero(n)
+    {
+      return (n < 10 ? '0' : '') + n;
+    }
+    setTimeout(() =>
+      fs.writeFile((__dirname + '/backups/'+date+'_StudentList.json'), JSON.stringify(ST, null, '  '), () => {}),
+      2000);
 });
 
 
@@ -123,7 +133,8 @@ app.delete('/:n', (req, res) =>
     }
 });
 
-app.delete('/backup/', (req, res) =>
+app.delete('/backup/:yyyyddmm', (req, res) =>
 {
+    let date = req.params.yyyyddmm;
 
 });
