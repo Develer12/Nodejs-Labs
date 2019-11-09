@@ -149,7 +149,7 @@ app.delete('/backup/:yyyyddmm', (req, res) =>
 
         files.forEach(file =>
         {
-            console.log(BackupDate+' '+fBackupDate);
+            let fBackupDate = dateSlice(file);
             if (BackupDate > fBackupDate)
             {
                 fs.unlink(__dirname + '/backups/' + file, err =>
