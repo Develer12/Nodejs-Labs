@@ -4,7 +4,106 @@
     <meta charset="utf-8">
     <title>Yeah mr krabs</title>
   </head>
-  <body>
-    
-  </body>
+<body onload="get_pul()">
+
+<button onclick="get_pul()">Update</button>
+<hr/>
+<br/>
+<section id="out_pulp"></section>
+<hr/>
+
+<section id="insert-pulpit">
+    <div>
+        <label>
+            <input name="newPulpitData" id="id" type="number" placeholder="Id">
+        </label>
+        <label>
+            <input name="newPulpitData" id="name" type="text" placeholder="Name">
+        </label>
+        <label>
+            <input name="newPulpitData" id="faculty" type="number" placeholder="Faculty Id">
+        </label>
+    </div>
+    <button onclick="submit()">Submit</button>
+</section>
+<br/>
+<br/>
+<section id="errors" style="color: red; font-size: 20px;"></section>
+<button id="close-error" style="display: none;" onclick="closeError()">Close</button>
+
+<script>
+    const LINK = 'http://localhost:3000/api/pulpits';
+    function get_pul()
+    {
+      fetch(LINK).then(res => res.json()).then(res =>
+      {
+        checkErrors(res);
+        let container = document.getElementById('out_pulp');
+        container.innerHTML = '';
+        res.forEach(pulpit =>
+        {
+          let pulp = document.createElement('div');
+          let deleteButton = document.createElement('button');
+          deleteButton.setAttribute('onclick', 'del_pulp(event)');
+          deleteButton.setAttribute('pulpitId', pulpit.Pulpit_Id);
+          deleteButton.innerText = 'Delete';
+          pulp.innerHTML = `<span>${pulpit.Pulpit_Id}. ${pulpit.Pulpit_Name}, Faculty - ${pulpit.Faculty}</span>`;
+          pulp.appendChild(deleteButton);
+          container.append(pulp, document.createElement('br'));
+        });
+      });
+    }
+    function submit()
+    {
+        let pulpitData = Array.from(document.getElementsByName('newPulpitData')).map(a =>
+        {
+            return {field: a.getAttribute('id'), value: a.value};
+        });
+        let pulpitId = pulpitData.find(a => a.field === 'id').value;
+        upsert(pulpitData, pulpitId);
+    }
+    function upsert(pulpitData, pulpitId)
+    {
+        fetch(LINK,
+        {
+            method: pulpitId ? 'PUT' : 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify
+            ({
+                Pulpit_Id: pulpitId ? Number(pulpitId) : undefined,
+                Pulpit_Name: pulpitData.find(a => a.field === 'name').value,
+                Faculty: pulpitData.find(a => a.field === 'faculty').value
+            })
+        }).then(res => res.json()).then(res =>
+        {
+            checkErrors(res);
+            getPulpits();
+        });
+    }
+    function deletePulpit(event)
+    {
+      if (confirm('Are you sure you want to remove this record?')) {
+        fetch(LINK + '/' + event.target.getAttribute('pulpitId'), {method: 'DELETE'})
+          .then(res => res.json()).then(res =>
+            {
+              checkErrors(res);
+              getPulpits();
+            });
+        }
+    }
+    function checkErrors(res)
+    {
+      if (res.error)
+      {
+        document.getElementById('errors').innerText = res.error;
+        document.getElementById('close-error').style.display = 'block';
+      }
+    }
+    function closeError()
+    {
+      document.getElementById('errors').innerText = '';
+      document.getElementById('close-error').style.display = 'none';
+    }
+</script>
+</body>
 </html>
