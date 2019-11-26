@@ -1,13 +1,12 @@
 const sql = require('mssql');
 const express = require('express');
 var bodyParser = require('body-parser')
-const que = require('./queries');
+const Db = require('./DB');
+const DB = new Db();
 
 
 const PORT = 3000;
 const HOST = 'localhost';
-let config = {user: 'DESKTOP-U4BLHC6', server: 'localhost', database: 'Nodejs'};
-
 
 const app = express();
 app.use(bodyParser.json())
@@ -22,10 +21,8 @@ let connection=(Query)=>
 {
   sql.connect(config, err =>
   {
-
        console.log("DB is connected");
        Query;
-
   })
 }
 
@@ -55,29 +52,43 @@ app.get('/', (req, res) =>
 
 app.get('/api/faculties', (req, res) =>
 {
-
+    console.log('Get faculties');
+    getHand('FACULTY', req, res);
 });
 
 app.get('/api/pulpits', (req, res) =>
 {
     console.log('Get pulpits');
-    connection(getpul());
+    getHand('PULPIT', req, res);
 });
 
 app.get('/api/subjects', (req, res) =>
 {
-
+    console.log('Get subjects');
+    getHand('SUBJECT', req, res);
 });
 
 app.get('/api/auditortype', (req, res) =>
 {
-
+    console.log('Get Auditorium Type');
+    getHand('AUDITORIUM_TYPE', req, res);
 });
 
 app.get('/api/auditor', (req, res) =>
 {
-
+    console.log('Get Auditorium');
+    getHand('AUDITORIUM', req, res);
 });
+
+function getHand(tab, req, res)
+{
+    DB.Get(tab).then(records =>
+    {response.json(records.recordset);}).catch(error =>
+        {
+            response.statusCode = 400;
+            response.json({error: String(error)});
+        });
+}
 
 app.post('/api/faculties', (req, res) =>
 {
@@ -103,6 +114,16 @@ app.post('/api/auditor', (req, res) =>
 {
 
 });
+
+function postHand()
+{
+    DB.Insert(object, request.body).then(record =>
+    {response.json(record.recordset[0]);}).catch(error =>
+    {
+        response.statusCode = 400;
+        response.json({error: String(error)});
+    });
+}
 
 app.put('/api/faculties', (req, res) =>
 {
