@@ -47,7 +47,7 @@
           deleteButton.setAttribute('onclick', 'del_pulp(event)');
           deleteButton.setAttribute('pulpitId', pulpit.Pulpit_Id);
           deleteButton.innerText = 'Delete';
-          pulp.innerHTML = `<span>${pulpit.Pulpit_Id}. ${pulpit.Pulpit_Name}, Faculty - ${pulpit.Faculty}</span>`;
+          pulp.innerHTML = `<span>${pulpit.PULPIT} - ${pulpit.PULPIT_NAME} [${pulpit.FACULTY}] </span>`;
           pulp.appendChild(deleteButton);
           container.append(pulp, document.createElement('br'));
         });

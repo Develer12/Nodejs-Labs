@@ -26,8 +26,8 @@ class DB {
     {
         return connectionPool.then(pool =>
           {
-            const idField = tab + '_Id';
-            if (!fields[idField] || !Number.isInteger(fields[idField]))
+            const tab = tab + '_Id';
+            if (!fields[tab] || !Number.isInteger(fields[tab]))
                 throw 'Problem with ID';
             const req = pool.req();
             let command = `UPDATE ${tab} SET `;
@@ -39,7 +39,7 @@ class DB {
                     command += `${field} = @${field},`;
             });
             command = command.slice(0, -1);
-            command += ` WHERE ${idField} = @${idField}`;
+            command += ` WHERE ${tab} = @${tab}`;
             return req.query(command);
         });
     }
