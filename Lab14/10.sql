@@ -279,8 +279,6 @@ insert into  AUDITORIUM   (AUDITORIUM,   AUDITORIUM_NAME, AUDITORIUM_TYPE, AUDIT
                        values  ('320-4',   '320-4', 'À ',  90);
 insert into  AUDITORIUM   (AUDITORIUM,   AUDITORIUM_NAME, AUDITORIUM_TYPE, AUDITORIUM_CAPACITY )
                        values  ('429-4',   '429-4', 'À ',  90);
-insert into  AUDITORIUM   (AUDITORIUM,   AUDITORIUM_NAME, AUDITORIUM_TYPE, AUDITORIUM_CAPACITY )
-                        values  ('?',   '???', 'À ',  90);
 -----------------------------------------------------------------------------------------------------------------------
 
 
