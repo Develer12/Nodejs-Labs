@@ -25,11 +25,54 @@ app.get('/', (req, res) =>
 
 app.get('/api/:tab', (req, res) =>
 {
-    console.log(`Get ${req.params.tab}`);
-    DB.GetPulp(req.params.tab).then(records => res.json(records))
+    let tab = req.params.tab;
+    console.log(`Get ${tab}`);
+    DB.GetTab(tab).then(records => res.json(records))
       .catch(error =>
       {
       res.statusCode = 400;
       res.json({error: String(error)});
+      });
+});
+
+app.post('/api/:tab', (req, res) =>
+{
+    let tab = req.params.tab;
+    console.log(`Post ${tab}`);
+    DB.InsertField(tab, req.body)
+      .then(record => res.json(record))
+      .catch(error =>
+      {
+        res.statusCode = 400;
+        res.json({error: String(error)});
+      });
+});
+
+app.put('/api/:tab', (req, res) =>
+{
+    let tab = req.params.tab;
+    console.log(`Put ${tab}`);
+    let id = req.body._id;
+    delete req.body._id;
+    console.log('put ', id);
+    DB.UpdateField(tab, id, req.body)
+      .then(record => res.json(record))
+      .catch(error =>
+      {
+        res.statusCode = 400;
+        res.json({error: String(error)});
+      });
+});
+
+app.delete('/api/:tab/:id', (req, res) =>
+{
+    let tab = req.params.tab;
+    console.log(`Delete ${tab}`);
+    DB.DeleteField(req.params.tab, req.params.id)
+      .then(record => res.json(record))
+      .catch(error =>
+      {
+        res.statusCode = 400;
+        res.json({error: String(error)});
       });
 });
