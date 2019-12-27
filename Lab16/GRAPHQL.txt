@@ -1,0 +1,18 @@
+{
+  getFaculties
+  (FACULTY: "ХТиТ") 
+  {
+    FACULTY_NAME
+  }
+}
+
+and
+
+mutation{
+  setFaculty
+  (facultyId: "da", facultyName: "da") 
+  {
+    FACULTY_ID
+    FACULTY_NAME
+  }
+}
