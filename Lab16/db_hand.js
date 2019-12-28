@@ -20,10 +20,14 @@ class DB
           .catch(err => console.log('Connection Failed: ', err));
     }
 
-    query(query)
+    query(sqlquery)
     {
-        return connectionPool
-          .then(pool => pool.query(query))
+          return connectionPool.then(pool =>
+          {
+            const req = pool.request();
+            console.log(sqlquery);
+            return req.query(sqlquery);
+          })
           .then(res => res.recordset);
     }
 

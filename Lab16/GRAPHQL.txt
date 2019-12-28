@@ -16,3 +16,26 @@ mutation{
     FACULTY_NAME
   }
 }
+
+and 
+
+{
+  getTEACHERs
+  (FACULTY:"ЛХФ") 
+  {
+    TEACHER_ID
+    TEACHER_NAME
+    PULPIT
+  }
+}
+and
+{
+  getSUBJECTs
+  (FACULTY:"ЛХФ") 
+  {
+    SUBJECT_ID
+    SUBJECT_NAME
+    PULPIT
+  }
+}
+

@@ -97,52 +97,29 @@ const UniversityRoot = new GraphQLObjectType
             description: "List of all PULPITs",
             resolve: (root, args) => getRecordsByField('PULPIT', args.PULPIT)
         },
-      getSUBJECTs: {
-          args:
-          {
-              SUBJECT: {type: GraphQLString},
-              FACULTY: {type: GraphQLString}
-          },
+        getSUBJECTs: {
+          args:{FACULTY: {type: GraphQLString}},
           type: new GraphQLList(SUBJECT),
           description: "List of all SUBJECTs",
-          resolve: async (root, args) =>
-          {
-              const {SUBJECT, FACULTY} = args;
-              return FACULTY ?
-                  await db.query
-                  (
-                    `SELECT * FROM SUBJECT s
-                        JOIN PULPIT p ON s.PULPIT = p.PULPIT_ID
-                        JOIN FACULTY f ON p.FACULTY = f.FACULTY_ID
-                        WHERE p.FACULTY = ${FACULTY};`
-                  )
-                  :
-                  await getRecordsByField('SUBJECT', SUBJECT);
-          }
+          resolve: (root, args) => GetSome
+                                            (
+                                              `USE Nodejs; SELECT SUBJECT_NAME, PULPIT FROM SUBJECT s
+                                              JOIN PULPIT p ON s.PULPIT = p.PULPIT_ID
+                                              JOIN FACULTY f ON p.FACULTY = f.FACULTY_ID
+                                              WHERE p.FACULTY = '${args.FACULTY}';`
+                                            )
       },
       getTEACHERs:
       {
-          args:
-          {
-              TEACHER: {type: GraphQLString},
-              FACULTY: {type: GraphQLString}
-          },
+          args: {FACULTY: {type: GraphQLString}},
           type: new GraphQLList(TEACHER),
-          description: "List of all TEACHERs",
-          resolve: async (root, args) =>
-          {
-              const {TEACHER, FACULTY} = args;
-              return FACULTY ?
-                  await db.query
-                  (
-                      `SELECT * FROM TEACHER t
-                              JOIN PULPIT p ON t.PULPIT = p.PULPIT_ID
-                              JOIN FACULTY f ON p.FACULTY = f.FACULTY_ID
-                              WHERE p.FACULTY = ${FACULTY};`
-                  )
-                  :
-                  await getRecordsByField('TEACHER', TEACHER);
-          }
+          description: "List of on faculty TEACHERs",
+          resolve: (root, args) => GetSome
+                                            (
+                                              `USE Nodejs; SELECT TEACHER_ID, TEACHER_NAME, PULPIT FROM TEACHER t
+                                                      JOIN PULPIT p ON t.PULPIT = p.PULPIT_ID
+                                                      WHERE p.FACULTY = '${args.FACULTY}';`
+                                            )
       },
       getAUDITORIUMTypes:
       {
@@ -268,6 +245,16 @@ async function getRecordsByField(object, field)
       records = await db.GetTab(object);
     return records;
 }
+
+async function GetSome(que)
+{
+    let records = [];
+    records = await db.query(que);
+    console.log(records);
+    return records;
+}
+
+
 async function mutateRecord(object, IDField, fields)
 {
     return await db.GetField(object, IDField ? IDField : fields)
