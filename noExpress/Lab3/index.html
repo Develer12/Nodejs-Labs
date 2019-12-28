@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width" />
+	<title>Lab 3</title>
+</head>
+<body>
+	<h1>Lab 3</h1>
+	<div id='result'></div>
+	<script>
+		result.innerHTML = '';
+		let n = 0;
+		const d = Date.now();
+		for (var k = 0; k < 21; k++) {
+			fetch(`http://localhost:5000/fact?k=${k}`, {
+				method: 'GET', mode: 'no-cors',
+				headers: { 'Content-Type': 'application/json', 'Accept': 'aplication/json'}
+			})
+			.then(res => {return res.json();})
+			.then((pdata) => {
+				result.innerHTML += (n++) + '.Результат: ' + (Date.now()-d) + '-' + pdata.k + '/' + pdata.fact + '<br/>';
+			});
+		}
+	</script>
+</body>
