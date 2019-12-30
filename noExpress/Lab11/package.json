@@ -1,0 +1,9 @@
+{
+  "name": "lab11",
+  "version": "2.0.0",
+  "author": "Develer12",
+  "dependencies": {
+    "ws": "^7.2.0",
+    "rpc-websockets": "^4.6.1"
+  }
+}
