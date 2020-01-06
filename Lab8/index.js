@@ -140,7 +140,7 @@ app.post('/xml', (req, res) =>
 {
     let xml = req.body;
     console.log(JSON.stringify(xml));
-    res.setHeader('Content-Type', 'text/xml');
+    res.setHeader('Content-Type', 'application/xml');
     let sum = 0;
     let text = '';
     xml.req.x.forEach(x => sum += Number(x.$.value));
