@@ -30,32 +30,32 @@ class DataBase extends EventEmitter{
         return this.model;
     }
     async commit(object, action) {
-        if (action === 'insert' || action === 'update') {
+      console.log(__dirname + '/data/names.json'+': '+ fs.existsSync(__dirname + '/data/names.json'));
+
+        if (action === 'insert')
             this.model.push(object);
-        } else if (action === 'delete') {
+        else if (action === 'delete')
             this.model.splice(this.model.indexOf(object), 1);
-        }
-        await fs.writeFile('./db/data/names.json', JSON.stringify(this.model, null, '  '), () => {});
+        await fs.writeFile(__dirname + '/data/names.json', JSON.stringify(this.model, null, '  '), () => {});
     }
     async insert(object) {
+        console.log('insert');
         if(object.id == '0')
          object.id = Math.max(...this.model.map(m => m.id)) + 1;
         await this.commit(object, 'insert');
         return object;
     }
     async update(updatedFields) {
+
         let oldObject = this.model.find(m => m.id == updatedFields.id);
         if (!oldObject) {
             throw {message: 'Invalid Request', code: 401};
         }
-        let targetObject = this.model.splice(this.model.indexOf(oldObject), 1)[0];
-        Object.keys(updatedFields).forEach(field => {
-            if (targetObject[field]) {
-                targetObject[field] = updatedFields[field];
-            }
-        });
-        await this.commit(targetObject, 'update');
-        return targetObject;
+
+        this.model.splice(this.model.indexOf(oldObject), 1);
+        this.model.push(updatedFields);
+        await fs.writeFile(__dirname + '/data/names.json', JSON.stringify(this.model, null, '  '), () => {});
+        return oldObject;
     }
     async delete(id) {
         let oldObject = this.model.find(m => m.id == id);

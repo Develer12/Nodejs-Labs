@@ -1,5 +1,6 @@
 const http = require('http');
 const fs = require('fs');
+const url = require('url');
 const DataBase = require('./db/DataBase');
 
 const HOST = 'localhost';
@@ -8,32 +9,40 @@ const PORT = 3000;
 const db = new DataBase(DataBase.names());
 
 db.on('get', async (req, res) => {
-    await res.json(await db.getRows());
+    await res.end(JSON.stringify(await db.getRows()));
     console.log("DB get");
 });
-db.on('post', async (req, res) => {
-    let newObject = {
-        name: req.query.name,
-        birth: req.query.birth
-    } = req.body;
-    await res.json(await db.addRow(newObject));
-    console.log("DB post");
-});
-db.on('put', async (req, res) => {
-    let object = {
-        id: req.query.id,
-        name: req.query.name,
-        birth: req.query.birth
-    } = req.body;
-    await res.json(await db.updateRow(object));
-    console.log("DB put");
-});
+db.on('post', async (req, res) => {Get_Body(req, res, 'post');});
+db.on('put', async (req, res) => {Get_Body(req, res, 'put');});
+
+function Get_Body(req, res, meth)
+{
+  let body = ' ';
+  req.on('data', chunk => {
+        body = chunk.toString();
+        body = JSON.parse(body);
+    });
+    req.on('end', async () => {
+      let EndBody =
+      {
+          id: body.id,
+          name: body.name,
+          birth: body.birth
+      };
+      console.log('BODY END:' + JSON.stringify(EndBody));
+      if(meth == 'post')
+        await res.end(JSON.stringify(await db.addRow(EndBody)));
+      else if (meth == 'put')
+        await res.end(JSON.stringify(await db.updateRow(EndBody)));
+      console.log("DB " + meth);
+    });
+}
 db.on('delete', async (req, res) => {
-    await res.json(await db.removeRow(req.query.id));
+    await res.end(JSON.stringify(await db.removeRow(url.parse(req.url, true).query.id)));
     console.log("DB delete");
 });
 db.on('commit', async (req, res) => {
-    await res.json(await db.stCommit());
+    await res.end(await db.stCommit());
     console.log("DB commit");
 });
 
@@ -110,7 +119,9 @@ let PUT_handler = (req, res)=>
 
 let DELETE_handler = (req, res)=>
 {
-  switch (req.url)
+  let Path_forGet = url.parse(req.url, true).pathname;
+  console.log(req.url);
+  switch ('/'+GetUrlPart(Path_forGet, 1)+'/'+GetUrlPart(Path_forGet, 2))
   {
     case '/api/db':
       db.emit('delete', req, res);
@@ -133,6 +144,24 @@ const server = http.createServer().listen(PORT, (v) =>
 })
 .on('error', (e) => {console.log(`${URL} | error: ${e.code}`)})
 .on('request', http_handler);
+
+function GetUrlPart(url_path, indx)
+{
+  let i = 0;
+  let curr_url = ' ';
+  i--;
+  decodeURI(url_path).split('/').forEach(e =>
+    {
+      i++;
+      console.log(i+' ' + e);
+      if(i == indx)
+      {
+        curr_url = e;
+        return;
+      }
+    });
+  return curr_url;
+}
 
 var timerId = 0;
 var timerIdout = 0;

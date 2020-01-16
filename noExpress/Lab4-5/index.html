@@ -24,9 +24,9 @@
     </section>
 
     <script>
-        const ENDPOINT = 'http://localhost:5000/api/db';
-        const COMMPOINT = 'http://localhost:5000/commit';
-        const STATPOINT = 'http://localhost:5000/api/ss';
+        const ENDPOINT = 'http://localhost:3000/api/db';
+        const COMMPOINT = 'http://localhost:3000/commit';
+        const STATPOINT = 'http://localhost:3000/api/ss';
 
         function Get() {
             fetch(ENDPOINT, {method: 'GET'})
@@ -84,6 +84,10 @@
         }
 
         function upsert(namesData, namesId, a) {
+          console.log(namesData.find(a => a.field === 'name').value);
+          console.log(namesData.find(a => a.field === 'birth').value);
+          console.log(namesId);
+
             fetch(ENDPOINT, {
                 method: a ? 'POST' : 'PUT',
                 headers: {
