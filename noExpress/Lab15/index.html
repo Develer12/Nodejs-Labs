@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main</title>
+</head>
+<body onload="getPulpits()">
+
+<button onclick="getPulpits()">Refresh</button>
+<hr/>
+<section id="select-pulpits"></section>
+<br/>
+<section id="insert-pulpit">
+    <div>
+        <label>
+            <input name="newPulpitData" id="id" type="text" placeholder="Id">
+        </label>
+        <label>
+            <input name="newPulpitData" id="nam" type="text" placeholder="Name">
+        </label>
+        <label>
+            <input name="newPulpitData" id="name" type="text" placeholder="Full Name">
+        </label>
+        <label>
+            <input name="newPulpitData" id="faculty" type="text" placeholder="Faculty">
+        </label>
+    </div>
+    <button onclick="submit()">Submit</button>
+</section>
+<br/>
+<br/>
+<section id="errors" style="color: red; font-size: 20px;"></section>
+<button id="close-error" style="display: none;" onclick="closeError()">Close</button>
+
+<script>
+    const ENDPOINT = 'http://localhost:3000/api/pulpit';
+    function getPulpits()
+    {
+      fetch(ENDPOINT).then(res => res.json())
+        .then(res =>
+        {
+          checkErrors(res);
+          console.log(res);
+          let container = document.getElementById('select-pulpits');
+          container.innerHTML = '';
+          res.forEach(pulpit =>
+          {
+            let pulpitContainer = document.createElement('div');
+            let deleteButton = document.createElement('button');
+            deleteButton.setAttribute('onclick', 'deletePulpit(event)');
+            deleteButton.setAttribute('pulpitId', pulpit._id);
+            deleteButton.innerText = 'Delete';
+            pulpitContainer.innerHTML = `<span>ID: ${pulpit._id} || ${pulpit.pulpit} - ${pulpit.pulpit_name} || ${pulpit.faculty}</span>`;
+            pulpitContainer.appendChild(deleteButton);
+            container.append(pulpitContainer, document.createElement('br'));
+          });
+        });
+    }
+    function submit()
+    {
+      let pulpitData = Array.from(document.getElementsByName('newPulpitData')).map(a =>
+        {
+            return {field: a.getAttribute('id'), value: a.value};
+        });
+        let pulpitId = pulpitData.find(a => a.field === 'id').value;
+        upsert(pulpitData, pulpitId);
+    }
+    function upsert(pulpitData, pulpitId)
+    {
+      console.log(pulpitId);
+      fetch(ENDPOINT,
+      {
+        method: pulpitId ? 'PUT' : 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(
+        {
+          _id: pulpitId ? pulpitId : undefined,
+          pulpit: pulpitData.find(a => a.field === 'nam').value,
+          pulpit_name: pulpitData.find(a => a.field === 'name').value,
+          faculty: pulpitData.find(a => a.field === 'faculty').value
+        })
+      })
+      .then(res => res.json())
+      .then(res =>
+      {
+        checkErrors(res);
+        getPulpits();
+      });
+    }
+
+    function deletePulpit(event)
+    {
+      if (confirm('Delete it?'))
+      {
+        fetch(ENDPOINT + '/' + event.target.getAttribute('pulpitId'), {method: 'DELETE'})
+          .then(res => res.json())
+          .then(res =>
+          {
+            checkErrors(res);
+            getPulpits();
+          });
+      }
+    }
+    function checkErrors(res)
+    {
+        if (res.error)
+        {
+            document.getElementById('errors').innerText = res.error;
+            document.getElementById('close-error').style.display = 'block';
+        }
+    }
+    function closeError()
+    {
+        document.getElementById('errors').innerText = '';
+        document.getElementById('close-error').style.display = 'none';
+    }
+</script>
+</body>
+</html>
