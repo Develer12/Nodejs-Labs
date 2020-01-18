@@ -179,7 +179,6 @@ function GetUrlPart(url_path, indx)
   return curr_url?curr_url:' ';
 }
 
-
 const server = http.createServer().listen(PORT, (v) =>
 {
   console.log(`Listening on http://localhost:${PORT}`);

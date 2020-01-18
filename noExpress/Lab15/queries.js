@@ -63,7 +63,6 @@ class DB {
         return removedRecord;
       });
     }
-
 }
 
 module.exports = DB;
