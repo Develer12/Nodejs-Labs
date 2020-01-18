@@ -22,13 +22,13 @@ function Get_Body(req, res, meth)
         body = chunk.toString();
         body = JSON.parse(body);
     });
-    req.on('end', async () => {
-      let EndBody =
-      {
-          id: body.id,
-          name: body.name,
-          birth: body.birth
-      };
+  req.on('end', async () => {
+    let EndBody =
+    {
+        id: body.id,
+        name: body.name,
+        birth: body.birth
+    };
       console.log('BODY END:' + JSON.stringify(EndBody));
       if(meth == 'post')
         await res.end(JSON.stringify(await db.addRow(EndBody)));
