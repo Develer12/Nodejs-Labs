@@ -32,7 +32,11 @@ let http_handler = (req, res)=>
 
 let GET_handler = (req, res)=>
 {
-  switch (req.url)
+  let Url_forGet = req.url;
+  let Path_forGet = url.parse(req.url, true).pathname;
+  console.log(Path_forGet + ' | ' + Url_forGet);
+  console.log('URL: /'+ GetUrlPart(Path_forGet, 1));
+  switch ('/'+GetUrlPart(Path_forGet, 1))
   {
     case '/connection':
       let set = parseInt(url.parse(req.url, true).query.set);
@@ -40,14 +44,14 @@ let GET_handler = (req, res)=>
       {
           console.log('Set connection');
           res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
-          app.KeepAliveTimeout = set;
-          res.end(`KeepAliveTimeout = ${app.KeepAliveTimeout}`);
+          server.KeepAliveTimeout = set;
+          res.end(`KeepAliveTimeout = ${server.KeepAliveTimeout}`);
       }
       else
       {
         console.log('Get connection');
         res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
-        res.end(`KeepAliveTimeout = ${app.KeepAliveTimeout}`);
+        res.end(`KeepAliveTimeout = ${server.KeepAliveTimeout}`);
       }
     break;
     case '/close':
@@ -74,7 +78,6 @@ let GET_handler = (req, res)=>
         res.write(`<h3>RemoteAddress = ${socket.remoteAddress}</h3>`);
         res.write(`<h3>RemoteFamily = ${socket.remoteFamily}</h3>`);
         res.write(`<h3>RemotePort = ${socket.remotePort}</h3>`);
-        res.end(`<h3>BytesWritten = ${socket.bytesWritten}</h3>`);
       });
     break;
     case '/req-data':
@@ -95,13 +98,18 @@ let GET_handler = (req, res)=>
       res.sendFile(__dirname + '/files/Formparameter.html');
     break;
     case '/parameter':
-      let x = Number(req.query.x);
-      let y = Number(req.query.y);
-      parameterHandler(x, y, res);
-    break;
-    case '/parameter/:x/:y':
-      let x = Number(req.params.x);
-      let y = Number(req.params.y);
+      let x = 0, y = 0;
+      if(!Url_forGet.toString().includes('?'))
+      {
+        x = Number(GetUrlPart(Path_forGet, 2));
+        y = Number(GetUrlPart(Path_forGet, 3));
+      }
+      else
+      {
+        let baseURL = 'http://' + req.headers.host + '/';
+        x = Number(url.parse(req.url, true).query.x);
+        y = Number(url.parse(req.url, true).query.y);
+      }
       parameterHandler(x, y, res);
     break;
     case '/upload':
@@ -141,8 +149,15 @@ let POST_handler = (req, res)=>
   switch (req.url)
   {
     case '/formparameter':
-      console.log(JSON.stringify(req.body));
-      res.json(req.body);
+      let body = ' ';
+      req.on('data', chunk => {
+            body = chunk.toString();
+            body = JSON.parse(body);
+      });
+      req.on('end', async () => {
+          console.log(JSON.stringify(body));
+          res.end(JSON.stringify(body));
+      });
     break;
     case '/xml':
       let xml = req.body;
@@ -161,21 +176,19 @@ let POST_handler = (req, res)=>
     break;
     case '/json':
       console.log("Post JSON");
-      let
-      {
-        _comment: comment,
-        x: x,
-        y: y,
-        s: message,
-        m: array,
-        o: name
-      } = req.body;
-      res.json(
-      {
-          _comment: 'Response. ' + comment,
-          x_plus_y: x + y,
-          concat_s_o: message + ': ' + name.surname + ' ' + name.name,
-          length_m: array.length
+      let body = ' ';
+      req.on('data', chunk => {
+            body = chunk.toString();
+            body = JSON.parse(body);
+      });
+      req.on('end', async () => {
+        res.end(JSON.stringify
+        ({
+            _comment: 'Response. ' + body._comment,
+            x_plus_y: body.x + body.y,
+            concat_s_o: body.s + ': ' + body.o.surname + ' ' + body.o.name,
+            length_m: body.m.length
+        }));
       });
     break;
     case '/upload':
@@ -196,20 +209,46 @@ let POST_handler = (req, res)=>
   }
 };
 
+function GetUrlParam(url_parm, baseURL, name_parm)
+{
+  let curr_url = new URL(url_parm, baseURL);
+  let serch_parm = curr_url.searchParams;
+  if (serch_parm.has(name_parm))
+    return curr_url.searchParams.get(name_parm);
+  else return null;
+}
+
+function GetUrlPart(url_path, indx)
+{
+  let i = 0;
+  let curr_url = ' ';
+  i--;
+  decodeURI(url_path).split('/').forEach(e =>
+    {
+      i++;
+      if(i == indx)
+      {
+        curr_url = e;
+        return;
+      }
+    });
+  return curr_url;
+}
+
 function parameterHandler(x, y, res)
 {
     if (Number.isInteger(x) && Number.isInteger(y))
     {
-        res.json(
-          {
+        res.end(JSON.stringify
+          ({
             add: x + y,
             sub: x - y,
             mult: x * y,
             div: x / y
-        });
+        }));
     }
     else
-        res.json({message: 'Wrong data type'});
+        res.end('Wrong data type');
 }
 
 
