@@ -13,18 +13,20 @@
 <div id="full-name"></div>
 
 <script>
-$(document).ready(() => {
-const END_POINT = "http://localhost:5000/api/name";
-let settings = {
-"async": true,
-"crossDomain": true,
-"url": END_POINT,
-"method": "GET"
-};
-$.ajax(settings).done(response => {
-$("#full-name").text(response);
-}).then(() => {});
-});
+  $(document).ready(() => {
+    const END_POINT = "http://localhost:5000/api/name";
+    let settings =
+    {
+    "async": true,
+    "crossDomain": true,
+    "url": END_POINT,
+    "method": "GET"
+    };
+    $.ajax(settings).done(response => 
+      {
+      $("#full-name").text(response);
+    }).then(() => {});
+  });
 </script>
 </body>
 </html>

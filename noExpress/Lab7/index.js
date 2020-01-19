@@ -86,7 +86,7 @@ let Get_handler = (req, res) =>
           res.end(fs.readFileSync(__dirname + '/file/f.mp4'));
           break;
       }
-      default: HTTP405(req, res); break;
+      default: HTTP404(req, res); break;
 
     }
 }
@@ -96,7 +96,7 @@ let http_handler = (req, res) =>
     switch (req.method)
     {
       case 'GET': Get_handler(req, res); break;
-      default: HTTP404(req, res); break;
+      default: HTTP405(req, res); break;
     }
 }
 

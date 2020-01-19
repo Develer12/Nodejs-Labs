@@ -61,12 +61,14 @@ let GET_handler = (req, res)=>
       setTimeout(() => server.close(() => console.log("Server closed")), 1000);
     break;
     case '/headers':
+      res.setHeader("X-Type", "Created");
       console.log('Get headers');
       res.writeHead(200, {'Content-Type' : 'text/html; charset=utf-8'});
       for(key in req.headers)
         res.write(`<h3>request: ${key}: ${req.headers[key]}</h3>`);
       for(key in res.getHeaders())
         res.write(`<h3>response: ${key}: ${res.getHeaders[key]}</h3>`);
+      res.end();
     break;
     case '/socket':
       server.on('connection', (socket) =>
@@ -90,12 +92,12 @@ let GET_handler = (req, res)=>
       });
     break;
     case '/req-status':
-      res.statusCode = req.query.code;
-      res.statusMessage = req.query.mess;
+      res.statusCode = url.parse(req.url, true).query.code;
+      res.statusMessage = url.parse(req.url, true).query.mess;
       res.end();
     break;
     case '/formparameter':
-      res.sendFile(__dirname + '/files/Formparameter.html');
+      res.end(fs.readFileSync(__dirname + '/files/Formparameter.html'));
     break;
     case '/parameter':
       let x = 0, y = 0;
@@ -118,7 +120,9 @@ let GET_handler = (req, res)=>
       res.end(fs.readFileSync(__dirname + "/Update.html"));
     break;
     case '/files':
-      if (url.parse(req.url).pathname === '/files')
+      let fname = GetUrlPart(Path_forGet, 2);
+      console.log('file|'+fname+'|');
+      if (fname==' ')
       {
         console.log('Get files count');
         fs.readdir( __dirname + '/files', (err, files) =>
@@ -128,16 +132,16 @@ let GET_handler = (req, res)=>
           res.end();
         });
       }
-    break;
-    case '/upload':
-      fname = url.parse(req.url).pathname;
-      if(!fs.existsSync(__dirname + fname))
-        HTTP404(req, res);
       else
       {
-        console.log('Get file name');
-        res.writeHead(200, {'Content-Type' : 'text/palin; charset=utf-8'});
-        res.end(fs.readFileSync(__dirname + fname));
+        console.log(__dirname + '/files/' + fname);
+        if(!fs.existsSync(__dirname + '/files/' +  fname))
+          HTTP404(req, res);
+        else
+        {
+          res.writeHead(200, {'Content-Type' : 'text/plain; charset=utf-8'});
+          res.end(fs.readFileSync(__dirname + '/files/' +  fname));
+        }
       }
     break;
     default: HTTP404(req, res);  break;
@@ -146,10 +150,10 @@ let GET_handler = (req, res)=>
 
 let POST_handler = (req, res)=>
 {
+  let body = ' ';
   switch (req.url)
   {
     case '/formparameter':
-      let body = ' ';
       req.on('data', chunk => {
             body = chunk.toString();
             body = JSON.parse(body);
@@ -160,23 +164,36 @@ let POST_handler = (req, res)=>
       });
     break;
     case '/xml':
-      let xml = req.body;
-      console.log(JSON.stringify(xml));
-      res.setHeader('Content-Type', 'application/xml');
-      let sum = 0;
-      let text = '';
-      xml.req.x.forEach(x => sum += Number(x.$.value));
-      xml.req.m.forEach(m => text += m.$.value);
-      let responseText = `
-          <res="${xml.req.$.id}">
-          <sum element="x" result="${sum}"></sum>
-          <text element="m" result="${text}"></text>
-          </res>`;
-      res.end(responseText);
+      body = ' ';
+      req.on('data', chunk => {
+            body = chunk;
+            console.log('XML:'+body);
+      });
+      req.on('end', async () => {
+        let xml = body;
+        res.setHeader('Content-Type', 'text/xml');
+        let sum = 0;
+        let text = '';
+        let reqid = 0;
+        let rexi = 1;
+
+        let rex = new RegExp('<x value="(.*?)"/>', "gmi");
+        while(re = rex.exec(xml)){ sum=sum+Number(re[1]);}
+        rex = new RegExp('<m value="(.*?)"/>', "gmi");
+        rexi = 1;
+        while(re = rex.exec(xml)){ text+=re[1];}
+        rex = new RegExp('<req id="(.*?)"', "gmi");
+        while(re = rex.exec(xml)){ reqid=re[1];}
+        let responseText =
+           `<res="${reqid}">
+            <sum element="x" result="${sum}"></sum>
+            <text element="m" result="${text}"></text>
+            </res>`;
+        res.end(responseText);
+    });
     break;
     case '/json':
       console.log("Post JSON");
-      let body = ' ';
       req.on('data', chunk => {
             body = chunk.toString();
             body = JSON.parse(body);
@@ -192,18 +209,26 @@ let POST_handler = (req, res)=>
       });
     break;
     case '/upload':
-      let result = '';
-      let fname = '';
-      let File = req.files.file;
-      result+=File.data;
-      res.writeHead(200, {'Content-Type' : 'text/html; charset=utf-8'});
-      res.write(`<h1>File Upload</h1>`);
-      res.end(result);
-      File.mv(__dirname + '/files/' + File.name, (err) =>
-      {
-          if (err) throw err;
-          console.log('The file has been saved!');
+      body = ' ';
+      req.on('data', chunk => {
+            body = chunk;
+            console.log('BODY: ' + body);
       });
+      req.on('end', async () => {
+        let fname = '';
+
+        let rex = new RegExp('filename="(.*?)"', "gmi");
+        while(re = rex.exec(body)){ fname=re[1];}
+
+        res.writeHead(200, {'Content-Type' : 'text/html; charset=utf-8'});
+        res.write(`<h1>File Upload</h1>`);
+        res.end(body);
+        fs.writeFile(__dirname + '/files/copy' + fname, body, (err) =>
+        {
+            if (err) throw err;
+            console.log('The file has been saved!');
+        });
+    });
     break;
     default: HTTP404(req, res);  break;
   }
@@ -220,19 +245,20 @@ function GetUrlParam(url_parm, baseURL, name_parm)
 
 function GetUrlPart(url_path, indx)
 {
-  let i = 0;
-  let curr_url = ' ';
-  i--;
-  decodeURI(url_path).split('/').forEach(e =>
+    let i = 0;
+    let curr_url = ' ';
+    i--;
+    decodeURI(url_path).split('/').forEach(e =>
     {
       i++;
+      console.log(i+' ' + e);
       if(i == indx)
       {
         curr_url = e;
         return;
       }
     });
-  return curr_url;
+    return curr_url?curr_url:' ';
 }
 
 function parameterHandler(x, y, res)

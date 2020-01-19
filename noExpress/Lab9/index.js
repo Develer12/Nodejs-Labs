@@ -1,7 +1,4 @@
 var url = require("url");
-const express = require('express');
-const bodyParser = require('body-parser');
-const xmlBodyParser = require('express-xml-bodyparser');
 const fs = require('fs');
 const http = require('http');
 
@@ -77,15 +74,17 @@ let POST_handler = (req, res)=>
         let sum = 0;
         let text = '';
         let reqid = 0;
+        let rexi = 1;
 
         let rex = new RegExp('<x value="(.*?)"/>', "gmi");
-        while(re = rex.exec(xml)){ sum=+Number(re[1])}
+        while(re = rex.exec(xml)){ sum=sum+Number(re[1]);}
         rex = new RegExp('<m value="(.*?)"/>', "gmi");
-        while(re = rex.exec(xml)){ text=re[1]}
-        rex = new RegExp('<req="(.*?)"', "gmi");
-        while(re = rex.exec(xml)){ reqid=Number(re[1])}
+        rexi = 1;
+        while(re = rex.exec(xml)){ text+=re[1];}
+        rex = new RegExp('<req id="(.*?)"', "gmi");
+        while(re = rex.exec(xml)){ reqid=re[1];}
         let responseText =
-           `<res="2">
+           `<res="${reqid}">
             <sum element="x" result="${sum}"></sum>
             <text element="m" result="${text}"></text>
             </res>`;

@@ -30,7 +30,7 @@ server((req,res)=>
       break;
     case '/fac3':
     res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
-    res.end(fs.readFileSync('Lab3/index.html'));
+    res.end(fs.readFileSync(__dirname + '/index.html'));
       break;
     default:
       url.parse(req.url).pathname === '/fact';
