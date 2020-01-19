@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "author": "Develer12",
   "dependencies": {
-    "ws": "^7.2.0",
-    "rpc-websockets": "^4.6.1"
+    "rpc-websockets": "^5.0.14",
+    "ws": "^7.1.2"
   }
 }

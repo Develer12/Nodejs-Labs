@@ -1,7 +1,6 @@
 const http = require('http');
 let fs = require('fs');
 const WebSocket = require('ws');
-const RPC = require('rpc-websockets').Server;
 
 const PORT = 3000;
 const HOST = 'localhost';
@@ -11,8 +10,6 @@ const wsload = new WebSocket.Server({port: 5000, host: HOST, path: '/download'})
 const wspipo = new WebSocket.Server({port: 4001, host: HOST});
 const wsjson = new WebSocket.Server({port: 4002, host: HOST});
 const wsrpc = new RPC({port: 4003, host: HOST});
-const wsevent = new RPC({port: 4004, host: HOST});
-const wsnotif = new RPC({port: 4005, host: HOST});
 
 
 const server = http.createServer().listen(PORT, (v) =>
@@ -114,20 +111,3 @@ function fib(n)
     return numbers;
 }
 function fact(n) {return n === 1 ? 1 : n * fact(n - 1);}
-
-
-wsevent.event('A');
-wsevent.event('B');
-wsevent.event('C');
-console.log('Input A, B or C to start event');
-let input = process.stdin;
-input.setEncoding('utf-8');
-input.on('data', data => {
-    wsevent.emit(data);
-    process.stdout.write('Sended');
-});
-
-
-wsnotif.register('A', () => console.log('A notification was received')).public();
-wsnotif.register('B', () => console.log('B notification was received')).public();
-wsnotif.register('C', () => console.log('C notification was received')).public();

@@ -80,30 +80,3 @@ async function calc()
         * await wsrpc.call('mul', [2, 4, 6])
     );
 }
-
-
-const wsevent = new rpc('ws://localhost:4004');
-wsevent.on('open', () =>
-{
-    wsevent.subscribe('A');
-    wsevent.subscribe('B');
-    wsevent.subscribe('C');
-    wsevent.on('A', () => console.log('You start A event'));
-    wsevent.on('B', () => console.log('You start B event'));
-    wsevent.on('C', () => console.log('You start C event'));
-});
-
-
-const wsnotif = new rpc('ws://localhost:4005');
-wsnotif.on('open', () =>
-{
-    console.log('Input A, B or C to send to the server notification');
-    let input = process.stdin;
-    input.setEncoding('utf-8');
-    process.stdout.write('> ');
-    input.on('data', data =>
-    {
-        wsnotif.notify(data);
-        process.stdout.write('Sended');
-    });
-});
