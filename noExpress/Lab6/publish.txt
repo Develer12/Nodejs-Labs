@@ -1,0 +1,15 @@
+npm adduser
+npm login
+npm publish
+
+package.json
+{
+  "dependencies": {"nodemailer": "6.4.2"},
+  "description": "Send message to mail armagedondeveler@gmail.com",
+  "keyword": "Send message to mail armagedondeveler@gmail.com",
+  "main": "index.js",
+  "maintainers": [{"name": "develer12"}, {"email": "armagedondeveler@gmail.com"}],
+  "name": "m0603dev",
+  "publishConfig": {"access": "public"},
+  "version": "1.0.0"
+}

@@ -1,10 +1,9 @@
 const http = require('http');
 var mod = require('./m0603');
+const fs = require('fs');
 
 const HOST = 'localhost';
 const PORT = 5000;
-
-console.log("-->sendmail: ", require.resolve('sendmail'));
 
 async function mail()
 {
@@ -22,7 +21,7 @@ let http_handler = (req, res)=>
   switch (req.method)
   {
     case 'GET': GET_handler(req, res);  break;
-    case 'PUT': PUT_handler(req, res);  break;
+    case 'POST': POST_handler(req, res);  break;
     default: HTTP404(req, res);  break;
   }
 };
@@ -40,22 +39,18 @@ let GET_handler = (req, res)=>
   }
 };
 
-let PUT_handler = (req, res)=>
+let POST_handler = (req, res)=>
 {
   switch (req.url)
   {
     case '/sendMS':
-      (req, res) =>
-      {
-          var newObject =
-          {
-            mfrom: req.query.mfrom,
-            mfor: req.query.mfor,
-            Message: req.query.message
-          } = req.body;
-          console.log("Info about Emails get");
-      }
       console.log("Sending Start");
+      let body = ' ';
+      req.on('data', chunk => {
+            body = chunk.toString();
+            body = JSON.parse(body);
+        });
+      req.on('end', async () => { mod.Send(body).catch(console.error);});
     break;
     default: HTTP404(req, res);  break;
   }

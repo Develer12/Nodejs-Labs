@@ -8,10 +8,10 @@
     <section id="insert-names">
         <div>
             <label>
-                <input type="email" placeholder="From e-mail" name="New" id="mailfrom" type="text">
-                <input type="email" placeholder="Password" name="Pass" id="Passmail" type="text"><br>
-                <input type="email" placeholder="To e-mail" name="To" id="mailfor" type="text"><br>
-                <input placeholder="Message" name="Message" id="MS" type="text" size="60">
+                <input type="email" placeholder="From e-mail" name="newnamesData" id="mailfrom" type="text">
+                <input type="password" placeholder="Password" name="newnamesData" id="Passmail" type="text"><br>
+                <input type="email" placeholder="To e-mail" name="newnamesData" id="mailfor" type="text"><br>
+                <input placeholder="Message" name="newnamesData" id="MS" type="MS" size="60">
             </label>
         </div>
         <button onclick="Send()">Send</button>
@@ -23,19 +23,20 @@
 
         function Send() {
           let namesData = Array.from(document.getElementsByName('newnamesData')).map(a => {
-              return {field: a.getAttribute('id'), value: a.value};
-          });
+              return {field: a.getAttribute('id'), value: a.value};});
             fetch(ENDPOINT, {
-                method: 'PUT',
-                headers: {
-                'Content-Type': 'application/json'
-                },
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     mfrom: namesData.find(a => a.field === 'mailfrom').value,
-                    name: namesData.find(a => a.field === 'mailfor').value,
-                    birth: namesData.find(a => a.field === 'MS').value,
+                    fromps: namesData.find(a => a.field === 'Passmail').value,
+                    mfor: namesData.find(a => a.field === 'mailfor').value,
+                    MS: namesData.find(a => a.field === 'MS').value,
                 })
             });
+
+            alert('hi');
+
         }
     </script>
 </body>
