@@ -1,0 +1,3 @@
+﻿  Lab2.cpp
+d:\subject\cross\lab\lab13\tcp\lab2\lab2.cpp(10): warning C4101: wVersionRequested: неиспользованная локальная переменная
+  Lab2.vcxproj -> D:\Subject\Cross\Lab\Lab13\TCP\Debug\Lab2.exe

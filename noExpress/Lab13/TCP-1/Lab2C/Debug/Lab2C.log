@@ -1,0 +1,4 @@
+﻿  Lab2C.cpp
+d:\subject\cross\lab\lab13\tcp\lab2c\lab2c.cpp(10): warning C4101: wVersionRequested: неиспользованная локальная переменная
+d:\subject\cross\lab\lab13\tcp\lab2c\lab2c.cpp(36): warning C4101: ibuf: неиспользованная локальная переменная
+  Lab2C.vcxproj -> D:\Subject\Cross\Lab\Lab13\TCP\Lab2C\Debug\Lab2C.exe

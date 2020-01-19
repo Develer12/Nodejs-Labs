@@ -8,7 +8,7 @@ client.connect(PORT, HOST, ()=>{console.log(`Client connected: ${client.remoteAd
 
 client.write('Message for Server');
 
-client.on('data', data=>{console.log(`Client data: ${data.toString()}`); client.destroy();});
+client.on('data', data=>{console.log(`Client data: ${data.toString().slice(0, 25)}`); client.destroy();});
 
 client.on('close', ()=>{console.log('Client closed');});
 
