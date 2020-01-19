@@ -12,13 +12,12 @@
     "speciality": "ISIT"
   },
   {
-    "id": 3,
-    "name": "Loxa L.I.",
-    "bday": "1989-10-01",
-    "speciality": "MOBI"
+    "id": 4,
+    "name": "Mkh A.A.",
+    "speciality": "PT"
   },
   {
-    "id": 4,
+    "id": 3,
     "name": "Mkh A.A.",
     "speciality": "PT"
   }

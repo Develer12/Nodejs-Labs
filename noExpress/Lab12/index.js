@@ -208,7 +208,7 @@ let DELETE_handler = (req, res)=>
       });
     break;
     default:
-      if(Number.isInteger(GetUrlPart(Path_forGet, 1)))
+      if(Number.isInteger(parseInt(GetUrlPart(Path_forGet, 1))))
       {
         let n = GetUrlPart(Path_forGet, 2);
         let index = ST.findIndex(s => s.id == n);
