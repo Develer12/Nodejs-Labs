@@ -1,6 +1,7 @@
 const http = require('http');
 let fs = require('fs');
 const WebSocket = require('ws');
+const RPC = require('rpc-websockets').Server;
 
 const PORT = 3000;
 const HOST = 'localhost';
@@ -10,6 +11,7 @@ const wsload = new WebSocket.Server({port: 5000, host: HOST, path: '/download'})
 const wspipo = new WebSocket.Server({port: 4001, host: HOST});
 const wsjson = new WebSocket.Server({port: 4002, host: HOST});
 const wsrpc = new RPC({port: 4003, host: HOST});
+const wsrpc2 = new RPC({port: 4010, host: HOST});
 
 
 const server = http.createServer().listen(PORT, (v) =>
@@ -88,6 +90,13 @@ wsrpc.register('mul', params => params.reduce((a, b) => a * b, 1)).public();
 wsrpc.register('square', square).public();
 wsrpc.register('fib', fib).protected();
 wsrpc.register('fact', fact).protected();
+
+wsrpc2.setAuth(credentials => credentials.login === 'admin' && credentials.password === 'admin');
+wsrpc2.register('sum', params => params.reduce((a, b) => a + b, 0)).public();
+wsrpc2.register('mul', params => params.reduce((a, b) => a * b, 1)).public();
+wsrpc2.register('square', square).public();
+wsrpc2.register('fib', fib).protected();
+wsrpc2.register('fact', fact).protected();
 
 function square(args)
 {

@@ -1,7 +1,7 @@
 let fs = require('fs');
 const WebSocket = require('ws');
 const rpc = require('rpc-websockets').Client;
-
+const async = require('async');
 
 const ws = new WebSocket('ws:/localhost:4000');
 ws.on('open', () =>
@@ -49,6 +49,7 @@ wsjson.onmessage = message => {console.log(message.data);};
 const wsrpc = new rpc('ws://localhost:4003');
 wsrpc.on('open', () =>
 {
+    console.log("RPC");
     wsrpc.call('square', [5]).then(answer => console.log('square: ' + answer));
     wsrpc.call('square', [5, 4]).then(answer => console.log('square: ' + answer));
     wsrpc.call('sum', [2, 4, 6, 8, 10]).then(answer => console.log('sum: ' + answer));
@@ -67,6 +68,42 @@ wsrpc.on('open', () =>
             console.log('Unauthorized');
           }
       });
+});
+
+const wsrpc2 = new rpc('ws://localhost:4010');
+wsrpc2.on('open', () => {
+  async.parallel(
+  {
+    square1: ()=>{wsrpc2.call('square', [5]).then(answer => console.log('async/parallel square: ' + answer));},
+    square: ()=>{wsrpc2.call('square', [5, 4]).then(answer => console.log('async/parallel square: ' + answer));},
+    sum: ()=>{wsrpc2.call('sum', [2, 4, 6, 8, 10]).then(answer => console.log('async/parallel sum: ' + answer));},
+    mul: ()=>{wsrpc2.call('mul', [3, 5, 7, 9, 11, 13]).then(answer => console.log('async/parallel mul: ' + answer));},
+    fib: ()=>{wsrpc2.login({login: 'admin', password: 'admin'})
+      .then(async login =>
+      {
+          if (login)
+          {
+            wsrpc2.call('fib', 7).then(answer => console.log('async/parallel fib: ' + answer));
+          }
+          else
+          {
+            console.log('async/parallel Unauthorized');
+          }
+      });},
+    fact: ()=>{wsrpc2.login({login: 'admin', password: 'admin'})
+      .then(async login =>
+      {
+          if (login)
+          {
+            wsrpc2.call('fact', 5).then(answer => console.log('async/parallel fact: ' + answer));
+          }
+          else
+          {
+            console.log('async/parallel Unauthorized');
+          }
+      });}
+
+  });
 });
 async function calc()
 {
