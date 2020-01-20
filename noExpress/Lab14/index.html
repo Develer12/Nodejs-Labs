@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Yeah mr krabs</title>
+  </head>
+<body>
+
+<button onclick="get_pul()">Get pulpits</button>
+<button onclick="get_fac()">Get faculties</button>
+<button onclick="get_sub()">Get subjects</button>
+<button onclick="get_au()">Get Auditorium</button>
+<button onclick="get_autype()">Get AUDITORIUM_TYPE</button>
+<hr/>
+<br/>
+<section id="out_pulp"></section>
+<hr/>
+
+<section id="insert">
+
+</section>
+<br/>
+<br/>
+<section id="errors" style="color: red; font-size: 20px;"></section>
+<button id="close-error" style="display: none;" onclick="closeError()">Close</button>
+
+<script>
+    let ChTab = '';
+    let putpost = ''
+    const LINK = 'http://localhost:3000/api/';
+    function get_pul()
+    {
+      ChTab = 'PULPIT';
+      fetch(LINK+'PULPIT', {method: 'GET'}).then(res => res.json()).then(res =>
+      {
+        checkErrors(res);
+        let container = document.getElementById('out_pulp');
+        container.innerHTML = '';
+        res.forEach(pulpit =>
+        {
+          let pulp = document.createElement('div');
+          let deleteButton = document.createElement('button');
+          deleteButton.setAttribute('onclick', 'deletePulpit(event)');
+          deleteButton.setAttribute('ID', pulpit.PULPIT_ID);
+          deleteButton.innerText = 'Delete';
+          pulp.innerHTML = `<span>${pulpit.PULPIT_ID} - ${pulpit.PULPIT_NAME} [${pulpit.FACULTY}] </span>`;
+          pulp.appendChild(deleteButton);
+          container.append(pulp, document.createElement('br'));
+        });
+
+        container = document.getElementById("insert");
+        container.innerHTML= '';
+        container.innerHTML=`<div>
+            <label>
+                <input name="newData" id="id" type="text" placeholder="Id">
+            </label>
+            <label>
+                <input name="newData" id="name" type="text" placeholder="Name">
+            </label>
+            <label>
+                <input name="newData" id="faculty" type="text" placeholder="Faculty Id">
+            </label>
+        </div>
+        <button onclick="submit()">post</button>
+<button onclick="submitup()">update</button>
+        `;
+      });
+    }
+    function get_fac()
+    {
+      ChTab = 'FACULTY';
+      fetch(LINK+'FACULTY').then(res => res.json()).then(res =>
+      {
+        checkErrors(res);
+        let container = document.getElementById('out_pulp');
+        container.innerHTML = '';
+        res.forEach(pulpit =>
+        {
+          let pulp = document.createElement('div');
+          let deleteButton = document.createElement('button');
+          deleteButton.setAttribute('onclick', 'deletePulpit(event)');
+          deleteButton.setAttribute('ID', pulpit.FACULTY_ID);
+          deleteButton.innerText = 'Delete';
+          pulp.innerHTML = `<span>${pulpit.FACULTY_ID} - ${pulpit.FACULTY_NAME}</span>`;
+          pulp.appendChild(deleteButton);
+          container.append(pulp, document.createElement('br'));
+        });
+        container = document.getElementById("insert");
+        container.innerHTML= '';
+        container.innerHTML=`<div>
+            <label>
+                <input name="newData" id="id" type="text" placeholder="Id">
+            </label>
+            <label>
+                <input name="newData" id="name" type="text" placeholder="Name">
+            </label>
+        </div>
+        <button onclick="submit()">post</button>
+<button onclick="submitup()">update</button>
+        `;
+      });
+    }
+
+    function get_sub()
+    {
+      ChTab = 'SUBJECT';
+      fetch(LINK+'SUBJECT').then(res => res.json()).then(res =>
+      {
+        checkErrors(res);
+        let container = document.getElementById('out_pulp');
+        container.innerHTML = '';
+        res.forEach(pulpit =>
+        {
+          let pulp = document.createElement('div');
+          let deleteButton = document.createElement('button');
+          deleteButton.setAttribute('onclick', 'deletePulpit(event)');
+          deleteButton.setAttribute('ID', pulpit.SUBJECT_ID);
+          deleteButton.innerText = 'Delete';
+          pulp.innerHTML = `<span>${pulpit.SUBJECT_ID} - ${pulpit.SUBJECT_NAME} [${pulpit.PULPIT}]</span>`;
+          pulp.appendChild(deleteButton);
+          container.append(pulp, document.createElement('br'));
+        });
+        container = document.getElementById("insert");
+        container.innerHTML= '';
+        container.innerHTML=`<div>
+            <label>
+                <input name="newData" id="id" type="text" placeholder="Id">
+            </label>
+            <label>
+                <input name="newData" id="name" type="text" placeholder="Name">
+            </label>
+            <label>
+                <input name="newData" id="pulpit" type="text" placeholder="Pulpit Id">
+            </label>
+        </div>
+        <button onclick="submit()">post</button>
+<button onclick="submitup()">update</button>
+        `;
+      });
+    }
+
+    function get_au()
+    {
+      ChTab = 'AUDITORIUM';
+      fetch(LINK+'AUDITORIUM').then(res => res.json()).then(res =>
+      {
+        checkErrors(res);
+        let container = document.getElementById('out_pulp');
+        container.innerHTML = '';
+        res.forEach(pulpit =>
+        {
+          let pulp = document.createElement('div');
+          let deleteButton = document.createElement('button');
+          deleteButton.setAttribute('onclick', 'deletePulpit(event)');
+          deleteButton.setAttribute('ID', pulpit.AUDITORIUM_ID);
+          deleteButton.innerText = 'Delete';
+          pulp.innerHTML = `<span>${pulpit.AUDITORIUM_ID} - ${pulpit.AUDITORIUM_NAME} - ${pulpit.AUDITORIUM_CAPACITY} - ${pulpit.AUDITORIUM_TYPE}</span>`;
+          pulp.appendChild(deleteButton);
+          container.append(pulp, document.createElement('br'));
+        });
+        container = document.getElementById("insert");
+        container.innerHTML= '';
+        container.innerHTML=`<div>
+            <label>
+                <input name="newData" id="id" type="text" placeholder="Id">
+            </label>
+            <label>
+                <input name="newData" id="name" type="text" placeholder="Name">
+            </label>
+            <label>
+                <input name="newData" id="capacity" type="text" placeholder="Capacity">
+            </label>
+            <label>
+                <input name="newData" id="type" type="text" placeholder="Type Id">
+            </label>
+        </div>
+        <button onclick="submit()">post</button>
+<button onclick="submitup()">update</button>
+        `;
+      });
+    }
+
+    function get_autype()
+    {
+      ChTab = 'AUDITORIUM_TYPE';
+      fetch(LINK+'AUDITORIUM_TYPE').then(res => res.json()).then(res =>
+      {
+        checkErrors(res);
+        let container = document.getElementById('out_pulp');
+        container.innerHTML = '';
+        res.forEach(pulpit =>
+        {
+          let pulp = document.createElement('div');
+          let deleteButton = document.createElement('button');
+          deleteButton.setAttribute('onclick', 'deletePulpit(event)');
+          deleteButton.setAttribute('ID', pulpit.AUDITORIUM_TYPE_ID);
+          deleteButton.innerText = 'Delete';
+          pulp.innerHTML = `<span>${pulpit.AUDITORIUM_TYPE_ID} - ${pulpit.AUDITORIUM_TYPENAME}</span>`;
+          pulp.appendChild(deleteButton);
+          container.append(pulp, document.createElement('br'));
+        });
+        container = document.getElementById("insert");
+        container.innerHTML= '';
+        container.innerHTML=`<div>
+            <label>
+                <input name="newData" id="id" type="text" placeholder="Id">
+            </label>
+            <label>
+                <input name="newData" id="name" type="text" placeholder="Name">
+            </label>
+        </div>
+        <button onclick="submit()">post</button>
+<button onclick="submitup()">update</button>
+        `;
+      });
+    }
+    function submitup()
+    {
+      putpost = 'PUT';
+        let Data = Array.from(document.getElementsByName('newData')).map(a =>
+        {
+            return {field: a.getAttribute('id'), value: a.value};
+        });
+        let ID = Data.find(a => a.field === 'id').value;
+        upsert(Data, ID);
+    }
+    function submit()
+    {
+      putpost='POST';
+        let Data = Array.from(document.getElementsByName('newData')).map(a =>
+        {
+            return {field: a.getAttribute('id'), value: a.value};
+        });
+        let ID = Data.find(a => a.field === 'id').value;
+        upsert(Data, ID);
+    }
+    function upsert(Data, ID)
+    {
+        let son = '';
+        switch (ChTab) {
+          case 'PULPIT':
+            son = {
+                PULPIT_ID: Data.find(a => a.field === 'id').value,
+                PULPIT_NAME: Data.find(a => a.field === 'name').value,
+                FACULTY: Data.find(a => a.field === 'faculty').value };
+          break;
+          case 'FACULTY':
+            son = {
+                FACULTY_ID: Data.find(a => a.field === 'id').value,
+                FACULTY_NAME: Data.find(a => a.field === 'name').value};
+          break;
+          case 'SUBJECT':
+            son = {
+                SUBJECT_ID: Data.find(a => a.field === 'id').value,
+                SUBJECT_NAME: Data.find(a => a.field === 'name').value,
+                PULPIT: Data.find(a => a.field === 'pulpit').value };
+          break;
+          case 'AUDITORIUM':
+            son = {
+                AUDITORIUM_ID: Data.find(a => a.field === 'id').value,
+                AUDITORIUM_NAME: Data.find(a => a.field === 'name').value,
+                AUDITORIUM_CAPACITY: Data.find(a => a.field === 'capacity').value,
+                AUDITORIUM_TYPE: Data.find(a => a.field === 'type').value };
+          break;
+          case 'AUDITORIUM_TYPE':
+            son = {
+                AUDITORIUM_TYPE_ID: Data.find(a => a.field === 'id').value,
+                AUDITORIUM_TYPENAME: Data.find(a => a.field === 'name').value};
+          break;
+        }
+        fetch(LINK+ChTab,
+        {
+            method: putpost,
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(son)
+        }).then(res => res.json()).then(res =>
+        {
+            checkErrors(res);
+        });
+    }
+    function deletePulpit(event)
+    {
+      if (confirm('Are you sure you want to remove this record?')) {
+
+        fetch(LINK + ChTab + '/' + event.target.getAttribute('id'), {method: 'DELETE'})
+          .then(res => res.json()).then(res =>
+            {
+              checkErrors(res);
+              getPulpits();
+            });
+        }
+    }
+    function checkErrors(res)
+    {
+      if (res.error)
+      {
+        document.getElementById('errors').innerText = res.error;
+        document.getElementById('close-error').style.display = 'block';
+      }
+    }
+    function closeError()
+    {
+      document.getElementById('errors').innerText = '';
+      document.getElementById('close-error').style.display = 'none';
+    }
+</script>
+</body>
+</html>
