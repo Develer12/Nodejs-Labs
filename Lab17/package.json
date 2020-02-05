@@ -1,0 +1,8 @@
+{
+  "name": "lab17",
+  "version": "1.0.0",
+  "author": "Develer12",
+  "dependencies": {
+    "redis": "^2.8.0"
+  }
+}
