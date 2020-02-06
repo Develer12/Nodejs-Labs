@@ -19,6 +19,6 @@ client
     Promise.resolve()
       .then(() => {require(__dirname + '/part/part2')(client);})
       .then(() => {require(__dirname + '/part/part3')(client);})
-      //.then(() => {require(__dirname + '/part/part4')(client);})
-      //.then(() => {require(__dirname + '/part/part2')(redis, config);});
+      .then(() => {require(__dirname + '/part/part4')(client);})
+      .then(() => {require(__dirname + '/part/part5')(config, redis);});
   });
