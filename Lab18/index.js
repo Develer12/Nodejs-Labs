@@ -1,15 +1,21 @@
-const Db = require('./DB_Handler');
-const DB = new Db();
+const express = require('express');
+const API = require('./Handlers/Api_Handler');
+
+const app = express();
 
 const PORT = 3000;
 const HOST = 'localhost';
 
 
+app.get('/', (req, res) =>
+{
+    console.log('Send html');
+});
+
 app.get('/api/:tab', (req, res) =>
 {
-    console.log('Get faculties');
     let tab = req.params.tab;
-    getHand(tab, req, res);
+    API.get(tab, req, res);
 });
 
 function getHand(tab, req, res)
@@ -25,9 +31,8 @@ function getHand(tab, req, res)
 //-----POST------
 app.post('/api/:tab', (req, res) =>
 {
-    console.log('Get faculties');
     let tab = req.params.tab;
-    postHand(tab, req, res);
+    API.post(tab, req, res);
 });
 
 function postHand()
@@ -43,9 +48,8 @@ function postHand()
 //-----PUT------
 app.put('/api/:tab', (req, res) =>
 {
-    console.log('Get faculties');
     let tab = req.params.tab;
-    putHand(tab, req, res);
+    API.put(tab, req, res);
 });
 
 function putHand()
@@ -63,4 +67,5 @@ app.delete('/api/:tab/:code', (req, res) =>
 {
     let tab = req.params.tab;
     let code = req.params.code;
+    API.delete(tab, code, req, res)
 });
