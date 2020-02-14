@@ -69,3 +69,9 @@ app.delete('/api/:tab/:code', (req, res) =>
     let code = req.params.code;
     API.delete(tab, code, req, res)
 });
+
+app.listen(PORT, () =>
+{
+  console.log(`Listening on http://localhost:${PORT}`);
+})
+.on('error', (e) => {console.log(`${URL} | error: ${e.code}`)});

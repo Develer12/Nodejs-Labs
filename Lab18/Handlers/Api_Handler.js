@@ -4,7 +4,7 @@ const DB = new db();
 
 module.exports = {
     get: (tab, req, res) => {
-        DB.Get().then(results => res.json(results))
+        DB.Get(tab).then(results => res.json(results))
         .catch(err => {
             res.statusCode = 400;
             res.json({error: err.toString()});
