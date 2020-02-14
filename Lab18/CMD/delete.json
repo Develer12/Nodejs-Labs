@@ -1,0 +1,4 @@
+{
+  faculty:{"where": {"FACULTY_ID": "ИТ"}},
+  pulpit: {"where": {"PULPIT_ID": "ПИ"}}
+}

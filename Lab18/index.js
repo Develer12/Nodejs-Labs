@@ -1,7 +1,9 @@
 const express = require('express');
 const API = require('./Handlers/Api_Handler');
+const bodyParser = require('body-parser')
 
 const app = express();
+app.use(bodyParser.json());
 
 const PORT = 3000;
 const HOST = 'localhost';
@@ -10,6 +12,7 @@ const HOST = 'localhost';
 app.get('/', (req, res) =>
 {
     console.log('Send html');
+    res.sendFile(__dirname + '/index.html');
 });
 
 app.get('/api/:tab', (req, res) =>
@@ -35,16 +38,6 @@ app.post('/api/:tab', (req, res) =>
     API.post(tab, req, res);
 });
 
-function postHand()
-{
-    DB.Insert(object, req.body).then(record =>
-    {res.json(record.recordset[0]);}).catch(error =>
-    {
-        res.statusCode = 400;
-        res.json({error: String(error)});
-    });
-}
-
 //-----PUT------
 app.put('/api/:tab', (req, res) =>
 {
@@ -52,22 +45,11 @@ app.put('/api/:tab', (req, res) =>
     API.put(tab, req, res);
 });
 
-function putHand()
-{
-    DB.Update(object, req.body).then(record =>
-    {res.json(record.recordset[0]);}).catch(error =>
-    {
-        res.statusCode = 400;
-        res.json({error: String(error)});
-    });
-}
-
 //-----DELETE------
-app.delete('/api/:tab/:code', (req, res) =>
+app.delete('/api/:tab', (req, res) =>
 {
     let tab = req.params.tab;
-    let code = req.params.code;
-    API.delete(tab, code, req, res)
+    API.delete(tab, req, res)
 });
 
 app.listen(PORT, () =>

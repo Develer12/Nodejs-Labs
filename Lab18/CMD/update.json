@@ -1,0 +1,12 @@
+{
+  faculty:{
+    "update":{"FACULTY_NAME": "Информационных технологи"},
+    "where":{"where": {"FACULTY_ID": "ИТ"} }
+  },
+  pulpit: {
+    "update":{
+      "PULPIT_NAME": "Программной Инженерии",
+      "FACULTY": "ИТ"},
+    "where":{"where": {"PULPIT_ID": "ПИ"} }
+    }
+}

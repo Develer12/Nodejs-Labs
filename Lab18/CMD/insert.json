@@ -1,0 +1,10 @@
+{
+  faculty:{
+    "FACULTY_ID": "ИТ",
+    "FACULTY_NAME": "Информационных технологий"},
+  pulpit: {
+    "PULPIT_ID": "ПИ",
+    "PULPIT_NAME": "Программной Инженерии",
+    "FACULTY": "ИТ"
+    }
+}

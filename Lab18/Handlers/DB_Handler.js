@@ -35,28 +35,20 @@ class DB {
       return model[tab](Sequelize, sequelize).findAll();
     }
 
-    Update(tab, fields)
+    Update(tab, body)
     {
-      return model[tab](Sequelize, sequelize).update({
-          faculty: faculty,
-          faculty_name: faculty_name
-      });
+      return model[tab](Sequelize, sequelize).update(body.update, body.where);
     }
 
-    Insert(tab, fields)
+    Insert(tab, body)
     {
-      return model[tab](Sequelize, sequelize).create({
-          faculty: faculty,
-          faculty_name: faculty_name
-      });
+      return model[tab](Sequelize, sequelize).create(body);
     }
 
     Delete(tab, id)
     {
-      return model[tab](Sequelize, sequelize).destroy({
-          faculty: faculty,
-          faculty_name: faculty_name
-      });    }
+      return model[tab](Sequelize, sequelize).destroy(id);
+    }
 }
 
 module.exports = DB;
