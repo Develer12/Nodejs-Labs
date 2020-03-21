@@ -4,7 +4,7 @@ const hbs = require('express-handlebars')
 .create({extname:'.hbs', helpers: require('./views/UserHelpers/PhoneList')});
 const DB = require('./model/DB');
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(bodyParser.json());
@@ -52,7 +52,7 @@ app.post('/Add', (req, res)=>{
 });
 app.post('/Update', async (req, res)=>{
   console.log('up');
-  
+
   await DB.Update(req.body);
 
   res.render('index', {
