@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="./static/index.css">
+    <script src="./static/index.js"></script>
+  </head>
+  <body>
+    <div class="ph-block">
+      <div class="ph-list">
+        {{#list list}} {{/list}}
+      </div>
+      {{#if field}}
+        {{> ph-field}}
+      {{/if}}
+      <div class="ph-buttons">
+        {{#if fadd}}
+          {{> fadd}}
+        {{/if}}
+        {{#if change}}
+          {{> change}}
+        {{/if}}
+        {{#if add}}
+          {{> add}}
+        {{/if}}
+      </div>
+    </div>
+  </body>
+</html>

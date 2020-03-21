@@ -1,0 +1,81 @@
+body{
+  margin: 0;
+}
+.ph-block{
+  border: 1px solid #cecece;
+  text-align: center;
+  margin: 2% 10% 2% 10%;
+  min-height: 500px;
+  max-height: 100%;
+}
+
+.ph-list{
+  border: 1px solid #cecece;
+  text-align: center;
+  margin: 5% 5% 5% 5%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+  min-height: 300px;
+  max-height: 300px;
+}
+
+.ph-item{
+  background: #dfdfdf;
+  border: 1px solid black;
+  text-align: justify;
+  margin: 1% 1% 1% 1%;
+  padding: 1% 1% 1% 1%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.ph-item:hover{
+  background: white;
+}
+span{
+  width: 50%;
+  margin-left: 2%;
+  font-size: 1.2em;
+}
+
+.ph-buttons{
+  display: flex;
+  flex-direction: row;
+  margin: 5% 5% 5% 5%;
+}
+
+.ph-button{
+  margin: 1% 2% 1% 2%;
+  min-height: 50px;
+  height: 6%;
+  width: 100%;
+  text-align:center;
+  font-size: 1.4em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid black;
+}
+.ph-button:hover{
+  background: #CFCFCF;
+}
+
+.ph-field{
+  border: 1px solid #cecece;
+  min-height: 50px;
+  height: 6%;
+  margin: 5% 5% 5% 5%;
+  background: #dfdfdf;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+input[type="text"]{
+  background: #dfdfdf;
+  border: none;
+  width: 50%;
+  margin-left: 2%;
+  font-size: 1.2em;
+}
