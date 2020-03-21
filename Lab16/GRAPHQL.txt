@@ -33,9 +33,7 @@ and
   getSUBJECTs
   (FACULTY:"ЛХФ") 
   {
-    SUBJECT_ID
     SUBJECT_NAME
-    PULPIT
   }
 }
 

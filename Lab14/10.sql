@@ -1,7 +1,7 @@
 create database Nodejs;
 go
 
-use Nodejs;
+use Nodejs;  
 go
 
 -- DROP TABLE FACULTY

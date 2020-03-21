@@ -4,9 +4,13 @@
     <meta charset="utf-8">
     <title>Yeah mr krabs</title>
   </head>
-<body onload="get_pul()">
+<body>
 
-<button onclick="get_pul()">Update</button>
+<button onclick="get_pul()">Get pulpits</button>
+<button onclick="get_fac()">Get faculties</button>
+<button onclick="get_sub()">Get subjects</button>
+<button onclick="get_au()">Get Auditorium</button>
+<button onclick="get_autype()">Get AUDITORIUM_TYPE</button>
 <hr/>
 <br/>
 <section id="out_pulp"></section>
@@ -15,13 +19,13 @@
 <section id="insert-pulpit">
     <div>
         <label>
-            <input name="newPulpitData" id="id" type="number" placeholder="Id">
+            <input name="newPulpitData" id="id" type="text" placeholder="Id">
         </label>
         <label>
             <input name="newPulpitData" id="name" type="text" placeholder="Name">
         </label>
         <label>
-            <input name="newPulpitData" id="faculty" type="number" placeholder="Faculty Id">
+            <input name="newPulpitData" id="faculty" type="text" placeholder="Faculty Id">
         </label>
     </div>
     <button onclick="submit()">Submit</button>
@@ -32,10 +36,10 @@
 <button id="close-error" style="display: none;" onclick="closeError()">Close</button>
 
 <script>
-    const LINK = 'http://localhost:3000/api/pulpits';
+    const LINK = 'http://localhost:3000/api/';
     function get_pul()
     {
-      fetch(LINK).then(res => res.json()).then(res =>
+      fetch(LINK+'PULPIT').then(res => res.json()).then(res =>
       {
         checkErrors(res);
         let container = document.getElementById('out_pulp');
@@ -45,14 +49,98 @@
           let pulp = document.createElement('div');
           let deleteButton = document.createElement('button');
           deleteButton.setAttribute('onclick', 'del_pulp(event)');
-          deleteButton.setAttribute('pulpitId', pulpit.Pulpit_Id);
+          deleteButton.setAttribute('pulpitId', pulpit.PULPIT_ID);
           deleteButton.innerText = 'Delete';
-          pulp.innerHTML = `<span>${pulpit.PULPIT} - ${pulpit.PULPIT_NAME} [${pulpit.FACULTY}] </span>`;
+          pulp.innerHTML = `<span>${pulpit.PULPIT_ID} - ${pulpit.PULPIT_NAME} [${pulpit.FACULTY}] </span>`;
           pulp.appendChild(deleteButton);
           container.append(pulp, document.createElement('br'));
         });
       });
     }
+    function get_fac()
+    {
+      fetch(LINK+'FACULTY').then(res => res.json()).then(res =>
+      {
+        checkErrors(res);
+        let container = document.getElementById('out_pulp');
+        container.innerHTML = '';
+        res.forEach(pulpit =>
+        {
+          let pulp = document.createElement('div');
+          let deleteButton = document.createElement('button');
+          deleteButton.setAttribute('onclick', 'del_pulp(event)');
+          deleteButton.setAttribute('pulpitId', pulpit.FACULTY_ID);
+          deleteButton.innerText = 'Delete';
+          pulp.innerHTML = `<span>${pulpit.FACULTY_ID} - ${pulpit.FACULTY_NAME}</span>`;
+          pulp.appendChild(deleteButton);
+          container.append(pulp, document.createElement('br'));
+        });
+      });
+    }
+
+    function get_sub()
+    {
+      fetch(LINK+'SUBJECT').then(res => res.json()).then(res =>
+      {
+        checkErrors(res);
+        let container = document.getElementById('out_pulp');
+        container.innerHTML = '';
+        res.forEach(pulpit =>
+        {
+          let pulp = document.createElement('div');
+          let deleteButton = document.createElement('button');
+          deleteButton.setAttribute('onclick', 'del_pulp(event)');
+          deleteButton.setAttribute('pulpitId', pulpit.SUBJECT_ID);
+          deleteButton.innerText = 'Delete';
+          pulp.innerHTML = `<span>${pulpit.SUBJECT_ID} - ${pulpit.SUBJECT_NAME} [${pulpit.PULPIT}]</span>`;
+          pulp.appendChild(deleteButton);
+          container.append(pulp, document.createElement('br'));
+        });
+      });
+    }
+
+    function get_au()
+    {
+      fetch(LINK+'AUDITORIUM').then(res => res.json()).then(res =>
+      {
+        checkErrors(res);
+        let container = document.getElementById('out_pulp');
+        container.innerHTML = '';
+        res.forEach(pulpit =>
+        {
+          let pulp = document.createElement('div');
+          let deleteButton = document.createElement('button');
+          deleteButton.setAttribute('onclick', 'del_pulp(event)');
+          deleteButton.setAttribute('pulpitId', pulpit.AUDITORIUM_ID);
+          deleteButton.innerText = 'Delete';
+          pulp.innerHTML = `<span>${pulpit.AUDITORIUM_ID} - ${pulpit.AUDITORIUM_NAME} - ${pulpit.AUDITORIUM_CAPACITY} - ${pulpit.AUDITORIUM_TYPE}</span>`;
+          pulp.appendChild(deleteButton);
+          container.append(pulp, document.createElement('br'));
+        });
+      });
+    }
+
+    function get_autype()
+    {
+      fetch(LINK+'AUDITORIUM_TYPE').then(res => res.json()).then(res =>
+      {
+        checkErrors(res);
+        let container = document.getElementById('out_pulp');
+        container.innerHTML = '';
+        res.forEach(pulpit =>
+        {
+          let pulp = document.createElement('div');
+          let deleteButton = document.createElement('button');
+          deleteButton.setAttribute('onclick', 'del_pulp(event)');
+          deleteButton.setAttribute('pulpitId', pulpit.AUDITORIUM_TYPE_ID);
+          deleteButton.innerText = 'Delete';
+          pulp.innerHTML = `<span>${pulpit.AUDITORIUM_TYPE_ID} - ${pulpit.AUDITORIUM_TYPENAME}</span>`;
+          pulp.appendChild(deleteButton);
+          container.append(pulp, document.createElement('br'));
+        });
+      });
+    }
+
     function submit()
     {
         let pulpitData = Array.from(document.getElementsByName('newPulpitData')).map(a =>

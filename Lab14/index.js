@@ -1,20 +1,8 @@
-const sql = require('mssql');
-const express = require('express');
-var bodyParser = require('body-parser')
 const Db = require('./queries');
 const DB = new Db();
 
 const PORT = 3000;
 const HOST = 'localhost';
-
-const app = express();
-app.use(bodyParser.json())
-const server = app.listen(PORT, HOST, () =>
-{
-    const URL = `http://${HOST}:${PORT}`;
-    console.log('Listening on ' + URL);
-})
-.on('error', (e) => {console.log(`${URL} | error: ${e.code}`)});
 
 
 
@@ -24,31 +12,31 @@ app.get('/', (req, res) =>
     res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/api/faculties', (req, res) =>
+app.get('/api/FACULTY', (req, res) =>
 {
     console.log('Get faculties');
     getHand('FACULTY', req, res);
 });
 
-app.get('/api/pulpits', (req, res) =>
+app.get('/api/PULPIT', (req, res) =>
 {
     console.log('Get pulpits');
     getHand('PULPIT', req, res);
 });
 
-app.get('/api/subjects', (req, res) =>
+app.get('/api/SUBJECT', (req, res) =>
 {
     console.log('Get subjects');
     getHand('SUBJECT', req, res);
 });
 
-app.get('/api/auditortype', (req, res) =>
+app.get('/api/AUDITORIUM_TYPE', (req, res) =>
 {
     console.log('Get Auditorium Type');
     getHand('AUDITORIUM_TYPE', req, res);
 });
 
-app.get('/api/auditor', (req, res) =>
+app.get('/api/AUDITORIUM', (req, res) =>
 {
     console.log('Get Auditorium');
     getHand('AUDITORIUM', req, res);
@@ -65,31 +53,31 @@ function getHand(tab, req, res)
 }
 
 //-----POST------
-app.post('/api/faculties', (req, res) =>
+app.post('/api/FACULTY', (req, res) =>
 {
     console.log('Get faculties');
     postHand('FACULTY', req, res);
 });
 
-app.post('/api/pulpits', (req, res) =>
+app.post('/api/PULPIT', (req, res) =>
 {
     console.log('Get pulpits');
     postHand('PULPIT', req, res);
 });
 
-app.post('/api/subjects', (req, res) =>
+app.post('/api/SUBJECT', (req, res) =>
 {
     console.log('Get subjects');
     postHand('SUBJECT', req, res);
 });
 
-app.post('/api/auditortype', (req, res) =>
+app.post('/api/AUDITORIUM_TYPE', (req, res) =>
 {
     console.log('Get Auditorium Type');
     postHand('AUDITORIUM_TYPE', req, res);
 });
 
-app.post('/api/auditor', (req, res) =>
+app.post('/api/AUDITORIUM', (req, res) =>
 {
     console.log('Get Auditorium');
     postHand('AUDITORIUM', req, res);
@@ -106,31 +94,31 @@ function postHand()
 }
 
 //-----PUT------
-app.put('/api/faculties', (req, res) =>
+app.put('/api/FACULTY', (req, res) =>
 {
     console.log('Get faculties');
     putHand('FACULTY', req, res);
 });
 
-app.put('/api/pulpits', (req, res) =>
+app.put('/api/PULPIT', (req, res) =>
 {
     console.log('Get pulpits');
     putHand('PULPIT', req, res);
 });
 
-app.put('/api/subjects', (req, res) =>
+app.put('/api/SUBJECT', (req, res) =>
 {
     console.log('Get subjects');
     putHand('SUBJECT', req, res);
 });
 
-app.put('/api/auditortype', (req, res) =>
+app.put('/api/AUDITORIUM_TYPE', (req, res) =>
 {
     console.log('Get Auditorium Type');
     putHand('AUDITORIUM_TYPE', req, res);
 });
 
-app.put('/api/auditor', (req, res) =>
+app.put('/api/AUDITORIUM', (req, res) =>
 {
     console.log('Get Auditorium');
     putHand('AUDITORIUM', req, res);
@@ -170,14 +158,4 @@ app.delete('/api/auditortype/:xy', (req, res) =>
 app.delete('/api/auditor/:xy', (req, res) =>
 {
     let xy = req.params.xy;
-});
-
-app.get('/drop', (req, res) =>
-{
-
-});
-
-app.get('/create', (req, res) =>
-{
-
 });

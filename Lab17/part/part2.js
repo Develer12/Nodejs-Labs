@@ -1,8 +1,7 @@
 module.exports = (client) => {
     Promise.resolve()
       .then(() => Set(client, 10000))
-      .then(() => Get(client, 10000))
-      .then(() => Del(client, 10000));
+      .then(() => Get(client, 10000));
 };
 
 function Set(client, count){
@@ -18,7 +17,7 @@ function Get(client, count){
     let timer = Date.now();
     for (var i = 0; i < count; i++) {
       let param = `s${i}`;
-      client.get(param, (err)=>{if(err) console.log("Error msg: "+err);});
+      client.get(param, (err, msg)=>{if(err) console.log("Error msg: "+err); console.log(msg);})
     }
     console.log(`Task 2: Get time for ${count} queries: ${Date.now() - timer} ms`);
 

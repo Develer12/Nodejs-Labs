@@ -45,7 +45,7 @@ class DB {
       {
         console.log(id);
         if (!id) {throw "Wrong ID";}
-        await db.collection(tableName).updateOne({_id: id}, {$set: fields});
+        await db.collection(tableName).updateOne({_id: ObjectId(id)}, {$set: fields});
         return db;
       })
       .then(db => {return db.collection(tableName).findOne(fields);});

@@ -68,7 +68,7 @@ app.delete('/api/:tab/:id', (req, res) =>
 {
     let tab = req.params.tab;
     console.log(`Delete ${tab}`);
-    DB.DeleteField(req.params.tab, req.params.id)
+    DB.DeleteField(tab, req.params.id)
       .then(record => res.json(record))
       .catch(error =>
       {

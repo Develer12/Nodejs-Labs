@@ -5,7 +5,7 @@ const ST = require('./StudentList');
 
 const fdir = __dirname + '/StudentList.json';
 const PORT = 5000;
-const HOST = 'localhost';
+const HOST = '192.168.0.202';
 
 let http_handler = (req, res)=>
 {
@@ -15,18 +15,10 @@ let http_handler = (req, res)=>
     case 'POST': POST_handler(req, res);  break;
     case 'PUT': PUT_handler(req, res);  break;
     case 'DELETE': DELETE_handler(req, res);  break;
-    default: HTTP404(req, res);  break;
+    default: HTTP405(req, res);  break;
   }
 };
 
-function GetUrlParam(url_parm, name_parm)
-{
-  let curr_url = new URL(url_parm);
-  let serch_parm = curr_url.searchParams;
-  if (serch_parm.has(name_parm))
-    return curr_url.searchParams.get(name_parm);
-  else return null;
-}
 
 function GetUrlPart(url_path, indx)
 {
@@ -229,6 +221,14 @@ let DELETE_handler = (req, res)=>
   }
 };
 
+
+let HTTP405 = (req, res)=>
+{
+  res.statusCode = 405;
+  res.statusMessage = 'Resourse not found';
+  res.end('Resourse not found');
+};
+
 let HTTP404 = (req, res)=>
 {
   res.statusCode = 404;
@@ -236,7 +236,7 @@ let HTTP404 = (req, res)=>
   res.end('Resourse not found');
 };
 
-const server = http.createServer().listen(PORT, (v) =>
+const server = http.createServer().listen(PORT, HOST, (v) =>
 {
   console.log(`Listening on http://localhost:${PORT}`);
 })
