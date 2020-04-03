@@ -6,6 +6,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "passport": "^0.4.1",
-    "passport-http": "^0.3.0"
+    "passport-http": "^0.3.0",
+    "cookie-parser": "^1.4.5"
   }
 }
