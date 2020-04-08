@@ -1,0 +1,9 @@
+pass: admin
+
+Country Name (2 letter code) [AU]:BY
+State or Province Name (full name) [Some-State]:Minsk
+Locality Name (eg, city) []:Minsk
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:BSTU
+Organizational Unit Name (eg, section) []:BSTU
+Common Name (e.g. server FQDN or YOUR name) []:Develer12
+Email Address []:cenia-v@mail.ru
