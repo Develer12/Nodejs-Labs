@@ -1,0 +1,9 @@
+{
+  "name": "Lab23",
+  "version": "1.0.0",
+  "author": "Develer12",
+  "dependencies": {
+    "express": "^4.17.1",
+    "webdav": "^3.3.0"
+  }
+}
