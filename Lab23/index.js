@@ -3,6 +3,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 const bodyParser = require('body-parser');
 const {ServerDH, ClientDH} = require('./DifHell');
+const {ServerSign, ClientVerify} = require('./ESignature');
 
 const app = express();
 app.use(bodyParser.json());
@@ -33,6 +34,25 @@ app.get('/resourse', (req, res) => {
     }
     else {
         res.status(409).json({ msg: 'Deffi-Hellman error' });
+    }
+});
+
+
+app.get('/signature', (req, res) => {
+    console.log('/signature');
+    try{
+        const text = fs.createReadStream(`${__dirname}/file.txt`);
+
+        const ss = new ServerSign();
+        ss.getSignContext(text, (signContext) => {
+            res.json({
+                file: text,
+                sign: signContext});
+        });
+    }
+    catch(e){
+        console.log('Signature error: ', e);
+        res.status(409).json({ msg: 'Signature error' });
     }
 });
 

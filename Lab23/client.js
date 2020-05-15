@@ -3,13 +3,15 @@ const https = require('http');
 const fs = require('fs');
 const crypto = require('crypto');
 const {ServerDH, ClientDH} = require('./DifHell');
+const {ServerSign, ClientVerify} = require('./ESignature');
+
 const request = require('request-promise');
 
 const PORT = 3001;
 
 
-app.listen(PORT, () =>{
-    request({
+app.listen(PORT, async () =>{
+    await request({
         method: 'GET',
         uri: 'http://localhost:3000/',
         json: true
@@ -31,7 +33,6 @@ app.listen(PORT, () =>{
                 console.log(`Encrypted text: ${text}`);
 
                 const decipher = crypto.createDecipher('aes256', clientSecret.toString());
-                decipher.setAutoPadding(false);
                 const decrypted = decipher.update(text, 'hex', 'utf8') + decipher.final('utf8');
 
                 console.log(`Decrypted text: ${decrypted}`);
@@ -43,6 +44,35 @@ app.listen(PORT, () =>{
     })
     .catch((err) => {
         console.log(`Request1 (module) ERROR: ${err}`);
+    });
+
+    await request({
+        method: 'GET',
+        uri: 'http://localhost:3000/signature',
+        json: true
+    })
+    .then((response) => {
+        let signature = response.sign;
+        let txt = response.file;
+
+        const text = fs.createReadStream(`${__dirname}/fileC.txt`);
+        let data = '';
+        text.on('data', (chunk) => {
+            data += chunk.toString();
+        });
+
+        let cv = new ClientVerify();
+        cv.verify(signature, text, (result) => {
+            if(result){
+                console.log('Signature verifyed, text: ', data);
+            }
+            else{
+                console.log('Signature not verifyed ((((((');
+            }
+        });
+    })
+    .catch((err) => {
+        console.log(`Signature ERROR: ${err}`);
     });
 })
 .on('error', (e) => {console.log(`Listener | error: ${e.code}`)});
