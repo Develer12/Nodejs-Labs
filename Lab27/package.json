@@ -1,0 +1,8 @@
+{
+    "name": "Lab27",
+    "version": "1.0.0",
+    "author": "Develer12",
+    "dependencies": {
+        "node-telegram-bot-api": "^0.50.0"
+    }
+}
