@@ -1,0 +1,24 @@
+{
+    "jsonrpc": "2.0",
+    "method": "sum",
+    "params": [42, 23],
+    "id": 1
+},
+{
+    "jsonrpc": "2.0",
+    "method": "mul",
+    "params": [42, 23, 2],
+    "id": "1"
+},
+{
+    "jsonrpc": "2.0",
+    "method": "div",
+    "params": [42, 23],
+    "id": "1"
+},
+{
+    "jsonrpc": "2.0",
+    "method": "proc",
+    "params": [42, 23],
+    "id": "1"
+}

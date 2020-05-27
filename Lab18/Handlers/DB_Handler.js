@@ -24,7 +24,7 @@ class DB {
           model['teacher'](Sequelize, sequelize).belongsTo(model['pulpit'](Sequelize, sequelize), {foreignKey: 'FK_TEACHER_PULPIT'});
           model['auditorium'](Sequelize, sequelize).belongsTo(model['auditorium_type'](Sequelize, sequelize), {foreignKey: 'AUDITORIUM_TYPENAME_NOT_NULL'});
 
-          sequelize.sync().then(result=>{console.log(result);})
+          sequelize.sync({force: true}).then(result=>{console.log(result);})
             .catch(err=> console.log("SYNC: "+err));
         })
           .catch(err=>{console.log("Connection: "+err);});

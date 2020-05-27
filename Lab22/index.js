@@ -9,7 +9,10 @@ let options = {
     cert: fs.readFileSync(`${__dirname}/cerificates/LAB.crt`).toString()
 };
 
-
+app.get('/da', (req, res) => {
+    console.log('da');
+    res.send('da');
+});
 app.get('/', (req, res) => {
     console.log('da');
     res.send('da');
