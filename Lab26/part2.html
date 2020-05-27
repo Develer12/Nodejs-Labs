@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+        <div>
+            <div> sum(1,2):
+                <span id="sum"></span>
+            </div>
+            <div> sub(3,4):
+                <span id="sub"></span>
+            </div>
+            <div> mul(5,6):
+                <span id="mul"></span>
+            </div>
+        </div>
+        <script>
+            WebAssembly.instantiateStreaming(fetch('/wasm'))
+            .then(obj => {
+                sum.innerText = obj.instance.exports.sum(1,2);
+                sub.innerText = obj.instance.exports.sub(3,4);
+                mul.innerText = obj.instance.exports.mul(5,6);
+            });
+        </script>
+    </body>
+</html>
