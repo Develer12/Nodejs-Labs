@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
     }
     res.cookie('id', id);
     //signed - подписан, для слежки за изменением
-    //res.clearCookie('id');
+    res.clearCookie('i');
     res.send();
 });
 
