@@ -1,0 +1,7 @@
+D:\Subject\Cross\Lab\Ekz2\44.exec io\c\c\bin\Debug\c.exe.config
+D:\Subject\Cross\Lab\Ekz2\44.exec io\c\c\bin\Debug\c.exe
+D:\Subject\Cross\Lab\Ekz2\44.exec io\c\c\bin\Debug\c.pdb
+D:\Subject\Cross\Lab\Ekz2\44.exec io\c\c\obj\Debug\c.csprojAssemblyReference.cache
+D:\Subject\Cross\Lab\Ekz2\44.exec io\c\c\obj\Debug\c.csproj.CoreCompileInputs.cache
+D:\Subject\Cross\Lab\Ekz2\44.exec io\c\c\obj\Debug\c.exe
+D:\Subject\Cross\Lab\Ekz2\44.exec io\c\c\obj\Debug\c.pdb
