@@ -1,0 +1,19 @@
+<html>
+   <head>
+    </head>
+    <body onload="init()">
+        <div id="text"></div>
+
+        <script>
+            function init() {
+                fetch('http://localhost:5000/hi', {
+                    method: 'GET'
+                })
+                .then(res => res.text())
+                .then(res => {
+                    document.getElementById('text').innerHTML = res;
+                });
+            }
+        </script>
+    </body>
+</html>

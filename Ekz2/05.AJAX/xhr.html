@@ -1,0 +1,25 @@
+<html>
+   <head>
+    </head>
+    <body onload="init()">
+        <div id="text"></div>
+
+        <script>
+            function init() {
+                let req = new XMLHttpRequest();
+                req.open('GET', 'http://localhost:5000/hi', true);
+                req.onreadystatechange = () => {
+                    if (req.readyState === 4) {
+                        if (req.status === 200) {
+                            document.getElementById('text').innerHTML = req.responseText;
+                        } 
+                        else {
+                            console.log(req.statusCode);
+                        }
+                    }
+                };
+                req.send();
+            }
+        </script>
+    </body>
+</html>
