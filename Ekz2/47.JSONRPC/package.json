@@ -1,0 +1,7 @@
+{
+  "version": "1.0.0",
+  "author": "Develer12",
+  "dependencies": {
+    "jsonrpc-server-http-nats": "^0.1.14"
+  }
+}

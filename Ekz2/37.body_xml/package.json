@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "author": "Develer12",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-xml-bodyparser": "^0.3.0",
+    "xmlbuilder": "^15.1.1"
+  }
+}
