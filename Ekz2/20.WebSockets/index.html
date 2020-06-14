@@ -1,0 +1,15 @@
+<html>
+    <head></head>
+    <body>
+        <script>
+            let socket = new WebSocket('ws://localhost:4000/ws');
+            socket.onopen = () => {
+                socket.send('hi');
+                console.log('open ws');
+            }
+            socket.onerror = (e) => {console.log('error '+e.message)}
+            socket.onmessage = (msg)=> {console.log('message '+msg.data)}
+            socket.onclose = (msg)=>{console.log('close '+msg.code)}
+        </script>
+    </body>
+</html>
