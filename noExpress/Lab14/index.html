@@ -41,9 +41,9 @@
           let pulp = document.createElement('div');
           let deleteButton = document.createElement('button');
           deleteButton.setAttribute('onclick', 'deletePulpit(event)');
-          deleteButton.setAttribute('ID', pulpit.PULPIT_ID);
+          deleteButton.setAttribute('ID', pulpit.PULPIT);
           deleteButton.innerText = 'Delete';
-          pulp.innerHTML = `<span>${pulpit.PULPIT_ID} - ${pulpit.PULPIT_NAME} [${pulpit.FACULTY}] </span>`;
+          pulp.innerHTML = `<span>${pulpit.PULPIT} - ${pulpit.PULPIT_NAME} [${pulpit.FACULTY}] </span>`;
           pulp.appendChild(deleteButton);
           container.append(pulp, document.createElement('br'));
         });
@@ -79,9 +79,9 @@
           let pulp = document.createElement('div');
           let deleteButton = document.createElement('button');
           deleteButton.setAttribute('onclick', 'deletePulpit(event)');
-          deleteButton.setAttribute('ID', pulpit.FACULTY_ID);
+          deleteButton.setAttribute('ID', pulpit.FACULTY);
           deleteButton.innerText = 'Delete';
-          pulp.innerHTML = `<span>${pulpit.FACULTY_ID} - ${pulpit.FACULTY_NAME}</span>`;
+          pulp.innerHTML = `<span>${pulpit.FACULTY} - ${pulpit.FACULTY_NAME}</span>`;
           pulp.appendChild(deleteButton);
           container.append(pulp, document.createElement('br'));
         });
@@ -114,9 +114,9 @@
           let pulp = document.createElement('div');
           let deleteButton = document.createElement('button');
           deleteButton.setAttribute('onclick', 'deletePulpit(event)');
-          deleteButton.setAttribute('ID', pulpit.SUBJECT_ID);
+          deleteButton.setAttribute('ID', pulpit.SUBJECT);
           deleteButton.innerText = 'Delete';
-          pulp.innerHTML = `<span>${pulpit.SUBJECT_ID} - ${pulpit.SUBJECT_NAME} [${pulpit.PULPIT}]</span>`;
+          pulp.innerHTML = `<span>${pulpit.SUBJECT} - ${pulpit.SUBJECT_NAME} [${pulpit.PULPIT}]</span>`;
           pulp.appendChild(deleteButton);
           container.append(pulp, document.createElement('br'));
         });
@@ -152,9 +152,9 @@
           let pulp = document.createElement('div');
           let deleteButton = document.createElement('button');
           deleteButton.setAttribute('onclick', 'deletePulpit(event)');
-          deleteButton.setAttribute('ID', pulpit.AUDITORIUM_ID);
+          deleteButton.setAttribute('ID', pulpit.AUDITORIUM);
           deleteButton.innerText = 'Delete';
-          pulp.innerHTML = `<span>${pulpit.AUDITORIUM_ID} - ${pulpit.AUDITORIUM_NAME} - ${pulpit.AUDITORIUM_CAPACITY} - ${pulpit.AUDITORIUM_TYPE}</span>`;
+          pulp.innerHTML = `<span>${pulpit.AUDITORIUM} - ${pulpit.AUDITORIUM_NAME} - ${pulpit.AUDITORIUM_CAPACITY} - ${pulpit.AUDITORIUM_TYPE}</span>`;
           pulp.appendChild(deleteButton);
           container.append(pulp, document.createElement('br'));
         });
@@ -193,9 +193,9 @@
           let pulp = document.createElement('div');
           let deleteButton = document.createElement('button');
           deleteButton.setAttribute('onclick', 'deletePulpit(event)');
-          deleteButton.setAttribute('ID', pulpit.AUDITORIUM_TYPE_ID);
+          deleteButton.setAttribute('ID', pulpit.AUDITORIUM_TYPE);
           deleteButton.innerText = 'Delete';
-          pulp.innerHTML = `<span>${pulpit.AUDITORIUM_TYPE_ID} - ${pulpit.AUDITORIUM_TYPENAME}</span>`;
+          pulp.innerHTML = `<span>${pulpit.AUDITORIUM_TYPE} - ${pulpit.AUDITORIUM_TYPENAME}</span>`;
           pulp.appendChild(deleteButton);
           container.append(pulp, document.createElement('br'));
         });
@@ -240,31 +240,31 @@
         switch (ChTab) {
           case 'PULPIT':
             son = {
-                PULPIT_ID: Data.find(a => a.field === 'id').value,
+                PULPIT: Data.find(a => a.field === 'id').value,
                 PULPIT_NAME: Data.find(a => a.field === 'name').value,
                 FACULTY: Data.find(a => a.field === 'faculty').value };
           break;
           case 'FACULTY':
             son = {
-                FACULTY_ID: Data.find(a => a.field === 'id').value,
+                FACULTY: Data.find(a => a.field === 'id').value,
                 FACULTY_NAME: Data.find(a => a.field === 'name').value};
           break;
           case 'SUBJECT':
             son = {
-                SUBJECT_ID: Data.find(a => a.field === 'id').value,
+                SUBJECT: Data.find(a => a.field === 'id').value,
                 SUBJECT_NAME: Data.find(a => a.field === 'name').value,
                 PULPIT: Data.find(a => a.field === 'pulpit').value };
           break;
           case 'AUDITORIUM':
             son = {
-                AUDITORIUM_ID: Data.find(a => a.field === 'id').value,
+                AUDITORIUM: Data.find(a => a.field === 'id').value,
                 AUDITORIUM_NAME: Data.find(a => a.field === 'name').value,
                 AUDITORIUM_CAPACITY: Data.find(a => a.field === 'capacity').value,
                 AUDITORIUM_TYPE: Data.find(a => a.field === 'type').value };
           break;
           case 'AUDITORIUM_TYPE':
             son = {
-                AUDITORIUM_TYPE_ID: Data.find(a => a.field === 'id').value,
+                AUDITORIUM_TYPE: Data.find(a => a.field === 'id').value,
                 AUDITORIUM_TYPENAME: Data.find(a => a.field === 'name').value};
           break;
         }

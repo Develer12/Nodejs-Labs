@@ -20,3 +20,5 @@ dir.stderr.on('data', (data) => {
 dir.on('close', (code) => {
     console.log(`close: ${code}`);
 });
+
+//spawn — child_process.spawn запускает новый процесс с помощью заданной команды.

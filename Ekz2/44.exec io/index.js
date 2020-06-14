@@ -12,3 +12,5 @@ const dir = exec('c',
 
 dir.stdin.write('da');
 dir.stdin.end(); 
+
+//exec — метод child_process.exec запускает команду в оболочке/консоли и буферизует вывод.
